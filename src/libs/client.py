@@ -27,6 +27,7 @@ class ObsidianClient:
                 "Authorization": f"Bearer {self.config.api_key}",
             },
             timeout=30.0,
+            verify=False,  # Skip SSL verification for local self-signed certificates
         )
         return self
 

@@ -31,7 +31,7 @@ class ObsidianConfig(BaseSettings):
         description="Obsidian Local REST API port",
     )
     protocol: str = Field(
-        default="http",
+        default="https",
         description="Protocol (http or https)",
     )
 
