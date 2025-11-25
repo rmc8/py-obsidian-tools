@@ -33,11 +33,16 @@
 | `complex_search` | 使用 JsonLogic 查询进行高级过滤搜索 |
 | `get_recent_changes` | 获取最近修改的文件（需要 Dataview 插件） |
 | `get_periodic_note` | 获取今天的日记/周记/月记（需要 Periodic Notes 插件） |
-| `get_recent_periodic_notes` | 获取最近的周期性笔记 |
+| `get_periodic_note_by_date` | 获取特定日期的周期性笔记（需要 Periodic Notes 插件） |
+| `get_recent_periodic_notes` | 获取最近的周期性笔记（需要 Dataview 插件） |
 | `open_note` | 在 Obsidian UI 中打开笔记 |
 | `get_active_note` | 获取当前活动的笔记 |
 | `update_active_note` | 更新活动笔记的内容 |
 | `append_active_note` | 向活动笔记追加内容 |
+| `patch_active_note` | 更新活动笔记的特定部分 |
+| `delete_active_note` | 删除当前活动的笔记 |
+| `server_status` | 获取 Obsidian Local REST API 服务器状态 |
+| `dataview_query` | 执行 Dataview DQL 查询（需要 Dataview 插件） |
 | `vector_search` | 使用自然语言进行语义搜索（需要 vector extras） |
 | `find_similar_notes` | 查找与指定笔记相似的笔记（需要 vector extras） |
 | `vector_status` | 获取向量搜索索引的状态（需要 vector extras） |
@@ -55,6 +60,10 @@
 - "使用 complex search 查找 Work 文件夹中的所有 markdown 文件"
 - "使用语义搜索查找关于机器学习的笔记"
 - "查找与我的项目计划相似的笔记"
+- "运行 Dataview 查询列出所有带有 #project 标签的笔记"
+- "获取上周一的日记"
+- "更新活动笔记的'任务'部分"
+- "检查 Obsidian API 服务器状态"
 
 ## 配置
 

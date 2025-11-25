@@ -33,11 +33,16 @@ Local REST API 커뮤니티 플러그인을 통해 Obsidian과 상호작용하�
 | `complex_search` | 고급 필터링을 위한 JsonLogic 쿼리 검색 |
 | `get_recent_changes` | 최근 수정된 파일 가져오기 (Dataview 플러그인 필요) |
 | `get_periodic_note` | 오늘의 일간/주간/월간 노트 가져오기 (Periodic Notes 플러그인 필요) |
-| `get_recent_periodic_notes` | 최근 주기적 노트 가져오기 |
+| `get_periodic_note_by_date` | 특정 날짜의 주기적 노트 가져오기 (Periodic Notes 플러그인 필요) |
+| `get_recent_periodic_notes` | 최근 주기적 노트 가져오기 (Dataview 플러그인 필요) |
 | `open_note` | Obsidian UI에서 노트 열기 |
 | `get_active_note` | 현재 활성 노트 가져오기 |
 | `update_active_note` | 활성 노트의 내용 업데이트 |
 | `append_active_note` | 활성 노트에 내용 추가 |
+| `patch_active_note` | 활성 노트의 특정 섹션 업데이트 |
+| `delete_active_note` | 현재 활성 노트 삭제 |
+| `server_status` | Obsidian Local REST API 서버 상태 가져오기 |
+| `dataview_query` | Dataview DQL 쿼리 실행 (Dataview 플러그인 필요) |
 | `vector_search` | 자연어를 사용한 의미 검색 (vector extras 필요) |
 | `find_similar_notes` | 지정된 노트와 유사한 노트 찾기 (vector extras 필요) |
 | `vector_status` | 벡터 검색 인덱스 상태 가져오기 (vector extras 필요) |
@@ -55,6 +60,10 @@ Local REST API 커뮤니티 플러그인을 통해 Obsidian과 상호작용하�
 - "complex search를 사용하여 Work 폴더의 모든 markdown 파일을 찾아줘"
 - "의미 검색을 사용하여 머신러닝에 관한 노트를 검색해줘"
 - "내 프로젝트 계획과 비슷한 노트를 찾아줘"
+- "Dataview 쿼리를 실행하여 #project 태그가 있는 모든 노트를 나열해줘"
+- "지난 월요일의 일일 노트를 가져와줘"
+- "활성 노트의 '작업' 섹션을 업데이트해줘"
+- "Obsidian API 서버 상태를 확인해줘"
 
 ## 설정
 

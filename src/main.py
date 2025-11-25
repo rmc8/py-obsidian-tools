@@ -300,7 +300,8 @@ async def patch_note(
         content: New content for the section
         target_type: Type of target - "heading", "block", or "frontmatter"
         target: Target identifier:
-                - For "heading": The heading text (e.g., "## My Section")
+                - For "heading": The heading text WITHOUT # markers (e.g., "My Section")
+                  For nested headings, use "::" delimiter (e.g., "Parent::Child")
                 - For "block": The block ID (e.g., "^block-id")
                 - For "frontmatter": The field name (e.g., "tags")
         operation: "append", "prepend", or "replace" (default: "replace")
@@ -477,6 +478,55 @@ async def complex_search(query: str) -> str:
 
 
 @mcp.tool()
+async def dataview_query(dql: str) -> str:
+    """Execute a Dataview Query Language (DQL) query.
+
+    Args:
+        dql: Dataview Query Language string.
+             Examples:
+             - List all files: "LIST"
+             - Table with columns: "TABLE file.mtime, file.size SORT file.mtime DESC"
+             - Filter by tag: "LIST FROM #project"
+             - Filter by folder: "LIST FROM \"Projects\""
+             - Recent files: "TABLE file.mtime WHERE file.mtime >= date(today) - dur(7 days)"
+
+    Returns:
+        Query results as formatted text.
+
+    Note:
+        Requires the Dataview plugin to be installed in Obsidian.
+    """
+    try:
+        config = get_config()
+        config.validate_config()
+
+        async with ObsidianClient(config) as client:
+            results = await client.search_dataview(dql)
+
+            if not results:
+                return "No results found."
+
+            output = [f"Query results ({len(results)} items):\n"]
+            for i, result in enumerate(results[:100], 1):  # Limit to 100 results
+                if isinstance(result, dict):
+                    filename = result.get("filename", f"Item {i}")
+                    output.append(f"  {i}. {filename}")
+                    # Show additional fields
+                    for key, value in result.items():
+                        if key not in ("filename", "file"):
+                            output.append(f"      {key}: {value}")
+                else:
+                    output.append(f"  {i}. {result}")
+
+            return "\n".join(output)
+
+    except ObsidianConfigError as e:
+        return f"Configuration Error: {e}"
+    except ObsidianAPIError as e:
+        return f"Error: {e}. Note: This feature requires the Dataview plugin."
+
+
+@mcp.tool()
 async def get_recent_changes(limit: int = 10, days: int = 90) -> str:
     """Get recently modified files in the vault.
 
@@ -589,7 +639,8 @@ async def get_recent_periodic_notes(
         List of recent periodic notes.
 
     Note:
-        Requires the Periodic Notes plugin to be installed in Obsidian.
+        Requires the Dataview plugin to be installed in Obsidian.
+        Uses date patterns to identify periodic notes (e.g., YYYY-MM-DD for daily).
     """
     try:
         config = get_config()
@@ -739,6 +790,171 @@ async def append_active_note(content: str) -> str:
         return f"Configuration Error: {e}"
     except ObsidianAPIError as e:
         return f"Error: {e}"
+
+
+@mcp.tool()
+async def patch_active_note(
+    content: str,
+    target_type: str,
+    target: str,
+    operation: str = "replace",
+) -> str:
+    """Update a specific section of the currently active note.
+
+    Args:
+        content: New content for the section
+        target_type: Type of target - "heading", "block", or "frontmatter"
+        target: Target identifier:
+                - For "heading": The heading text WITHOUT # markers (e.g., "My Section")
+                  For nested headings, use "::" delimiter (e.g., "Parent::Child")
+                - For "block": The block ID (e.g., "^block-id")
+                - For "frontmatter": The field name (e.g., "tags")
+        operation: "append", "prepend", or "replace" (default: "replace")
+
+    Returns:
+        Success or error message.
+    """
+    try:
+        config = get_config()
+        config.validate_config()
+
+        if target_type not in ("heading", "block", "frontmatter"):
+            return "Error: target_type must be 'heading', 'block', or 'frontmatter'"
+
+        if operation not in ("append", "prepend", "replace"):
+            return "Error: operation must be 'append', 'prepend', or 'replace'"
+
+        async with ObsidianClient(config) as client:
+            await client.patch_active_file(content, target_type, target, operation)
+            return f"Successfully patched active note ({target_type}: {target})"
+
+    except ObsidianConfigError as e:
+        return f"Configuration Error: {e}"
+    except ObsidianAPIError as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+async def delete_active_note(confirm: bool = False) -> str:
+    """Delete the currently active note in Obsidian.
+
+    Args:
+        confirm: Must be True to actually delete (safety check)
+
+    Returns:
+        Success or error message.
+    """
+    if not confirm:
+        return (
+            "Error: Set confirm=True to delete the active note. This is a safety check."
+        )
+
+    try:
+        config = get_config()
+        config.validate_config()
+
+        async with ObsidianClient(config) as client:
+            await client.delete_active_file()
+            return "Successfully deleted active note."
+
+    except ObsidianConfigError as e:
+        return f"Configuration Error: {e}"
+    except ObsidianAPIError as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+async def server_status() -> str:
+    """Get Obsidian Local REST API server status and authentication info.
+
+    Returns:
+        Server status including authentication state and API version.
+    """
+    try:
+        config = get_config()
+        config.validate_config()
+
+        async with ObsidianClient(config) as client:
+            status = await client.get_server_status()
+
+            if not status:
+                return "Unable to get server status."
+
+            output = ["Obsidian Local REST API Status:"]
+            for key, value in status.items():
+                output.append(f"  {key}: {value}")
+
+            return "\n".join(output)
+
+    except ObsidianConfigError as e:
+        return f"Configuration Error: {e}"
+    except ObsidianAPIError as e:
+        return f"Error: {e}"
+
+
+@mcp.tool()
+async def get_periodic_note_by_date(
+    period: str,
+    year: int,
+    month: int,
+    day: int,
+) -> str:
+    """Get a periodic note for a specific date.
+
+    Args:
+        period: Period type - "daily", "weekly", "monthly", "quarterly", or "yearly"
+        year: Year (e.g., 2025)
+        month: Month (1-12)
+        day: Day (1-31)
+
+    Returns:
+        Content of the periodic note for the specified date.
+
+    Note:
+        Requires the Periodic Notes plugin to be installed in Obsidian.
+    """
+    try:
+        config = get_config()
+        config.validate_config()
+
+        valid_periods = ["daily", "weekly", "monthly", "quarterly", "yearly"]
+        if period not in valid_periods:
+            return f"Error: Invalid period '{period}'. Must be one of: {', '.join(valid_periods)}"
+
+        async with ObsidianClient(config) as client:
+            result = await client.get_periodic_note_by_date(
+                period, year, month, day, return_metadata=True
+            )
+
+            if isinstance(result, str):
+                return (
+                    result
+                    if result
+                    else f"No {period} note found for {year}-{month:02d}-{day:02d}."
+                )
+
+            # NoteContent object
+            result_parts = []
+            if result.frontmatter:
+                fm_lines = ["---"]
+                for key, value in result.frontmatter.items():
+                    fm_lines.append(f"{key}: {value}")
+                fm_lines.append("---")
+                result_parts.append("\n".join(fm_lines))
+
+            if result.content:
+                result_parts.append(result.content)
+
+            return (
+                "\n".join(result_parts)
+                if result_parts
+                else f"No {period} note found for {year}-{month:02d}-{day:02d}."
+            )
+
+    except ObsidianConfigError as e:
+        return f"Configuration Error: {e}"
+    except ObsidianAPIError as e:
+        return f"Error: {e}. Note: This feature requires the Periodic Notes plugin."
 
 
 # ============================================================

@@ -33,11 +33,16 @@ The server implements multiple tools to interact with Obsidian:
 | `complex_search` | Search using JsonLogic queries for advanced filtering |
 | `get_recent_changes` | Get recently modified files (requires Dataview plugin) |
 | `get_periodic_note` | Get today's daily/weekly/monthly note (requires Periodic Notes plugin) |
-| `get_recent_periodic_notes` | Get recent periodic notes |
+| `get_periodic_note_by_date` | Get a periodic note for a specific date (requires Periodic Notes plugin) |
+| `get_recent_periodic_notes` | Get recent periodic notes (requires Dataview plugin) |
 | `open_note` | Open a note in Obsidian's UI |
 | `get_active_note` | Get the currently active note |
 | `update_active_note` | Update the active note's content |
 | `append_active_note` | Append content to the active note |
+| `patch_active_note` | Update a specific section of the active note |
+| `delete_active_note` | Delete the currently active note |
+| `server_status` | Get Obsidian Local REST API server status |
+| `dataview_query` | Execute Dataview DQL queries (requires Dataview plugin) |
 | `vector_search` | Semantic search across notes using natural language (requires vector extras) |
 | `find_similar_notes` | Find notes similar to a specified note (requires vector extras) |
 | `vector_status` | Get status of the vector search index (requires vector extras) |
@@ -55,6 +60,10 @@ You can use prompts like this:
 - "Find all markdown files in the Work folder using complex search"
 - "Search for notes about machine learning using semantic search"
 - "Find notes similar to my project plan"
+- "Run a Dataview query to list all notes with the tag #project"
+- "Get my daily note from last Monday"
+- "Update the 'Tasks' section of the active note"
+- "Check the Obsidian API server status"
 
 ## Configuration
 

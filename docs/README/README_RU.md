@@ -33,11 +33,16 @@ MCP-сервер для взаимодействия с Obsidian через пл
 | `complex_search` | Поиск с использованием JsonLogic-запросов для расширенной фильтрации |
 | `get_recent_changes` | Получение недавно изменённых файлов (требуется плагин Dataview) |
 | `get_periodic_note` | Получение сегодняшней ежедневной/еженедельной/ежемесячной заметки (требуется плагин Periodic Notes) |
-| `get_recent_periodic_notes` | Получение недавних периодических заметок |
+| `get_periodic_note_by_date` | Получение периодической заметки за определённую дату (требуется плагин Periodic Notes) |
+| `get_recent_periodic_notes` | Получение недавних периодических заметок (требуется плагин Dataview) |
 | `open_note` | Открытие заметки в интерфейсе Obsidian |
 | `get_active_note` | Получение текущей активной заметки |
 | `update_active_note` | Обновление содержимого активной заметки |
 | `append_active_note` | Добавление содержимого к активной заметке |
+| `patch_active_note` | Обновление определённого раздела активной заметки |
+| `delete_active_note` | Удаление текущей активной заметки |
+| `server_status` | Получение статуса сервера Obsidian Local REST API |
+| `dataview_query` | Выполнение Dataview DQL-запросов (требуется плагин Dataview) |
 | `vector_search` | Семантический поиск на естественном языке (требуется vector extras) |
 | `find_similar_notes` | Поиск заметок, похожих на указанную (требуется vector extras) |
 | `vector_status` | Получение статуса индекса векторного поиска (требуется vector extras) |

@@ -33,11 +33,16 @@ Der Server implementiert mehrere Werkzeuge zur Interaktion mit Obsidian:
 | `complex_search` | Suche mit JsonLogic-Abfragen für erweiterte Filterung |
 | `get_recent_changes` | Ruft kürzlich geänderte Dateien ab (erfordert Dataview-Plugin) |
 | `get_periodic_note` | Ruft die heutige tägliche/wöchentliche/monatliche Notiz ab (erfordert Periodic Notes-Plugin) |
-| `get_recent_periodic_notes` | Ruft aktuelle periodische Notizen ab |
+| `get_periodic_note_by_date` | Ruft die periodische Notiz eines bestimmten Datums ab (erfordert Periodic Notes-Plugin) |
+| `get_recent_periodic_notes` | Ruft aktuelle periodische Notizen ab (erfordert Dataview-Plugin) |
 | `open_note` | Öffnet eine Notiz in der Obsidian-Oberfläche |
 | `get_active_note` | Ruft die aktuell aktive Notiz ab |
 | `update_active_note` | Aktualisiert den Inhalt der aktiven Notiz |
 | `append_active_note` | Fügt Inhalt zur aktiven Notiz hinzu |
+| `patch_active_note` | Aktualisiert einen bestimmten Abschnitt der aktiven Notiz |
+| `delete_active_note` | Löscht die aktuell aktive Notiz |
+| `server_status` | Ruft den Status des Obsidian Local REST API-Servers ab |
+| `dataview_query` | Führt Dataview DQL-Abfragen aus (erfordert Dataview-Plugin) |
 | `vector_search` | Semantische Suche mit natürlicher Sprache (erfordert vector extras) |
 | `find_similar_notes` | Findet ähnliche Notizen zu einer bestimmten Notiz (erfordert vector extras) |
 | `vector_status` | Ruft den Status des Vektor-Suchindex ab (erfordert vector extras) |

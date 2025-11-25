@@ -33,11 +33,16 @@ Local REST APIコミュニティプラグインを介してObsidianと連携す�
 | `complex_search` | JsonLogicクエリを使用した高度なフィルタリング検索 |
 | `get_recent_changes` | 最近変更されたファイルを取得（Dataviewプラグインが必要） |
 | `get_periodic_note` | 今日のデイリー/ウィークリー/マンスリーノートを取得（Periodic Notesプラグインが必要） |
-| `get_recent_periodic_notes` | 最近の定期ノートを取得 |
+| `get_periodic_note_by_date` | 特定日付の定期ノートを取得（Periodic Notesプラグインが必要） |
+| `get_recent_periodic_notes` | 最近の定期ノートを取得（Dataviewプラグインが必要） |
 | `open_note` | ObsidianのUIでノートを開く |
 | `get_active_note` | 現在アクティブなノートを取得 |
 | `update_active_note` | アクティブなノートの内容を更新 |
 | `append_active_note` | アクティブなノートにコンテンツを追加 |
+| `patch_active_note` | アクティブなノートの特定セクションを更新 |
+| `delete_active_note` | 現在アクティブなノートを削除 |
+| `server_status` | Obsidian Local REST APIサーバーの状態を取得 |
+| `dataview_query` | Dataview DQLクエリを実行（Dataviewプラグインが必要） |
 | `vector_search` | 自然言語を使用したセマンティック検索（vector extrasが必要） |
 | `find_similar_notes` | 指定したノートに類似したノートを検索（vector extrasが必要） |
 | `vector_status` | ベクトル検索インデックスの状態を取得（vector extrasが必要） |
@@ -55,6 +60,10 @@ Local REST APIコミュニティプラグインを介してObsidianと連携す�
 - 「complex searchを使用してWorkフォルダ内のすべてのmarkdownファイルを検索して」
 - 「セマンティック検索を使用して機械学習に関するノートを検索して」
 - 「私のプロジェクト計画に似ているノートを探して」
+- 「Dataviewクエリを実行して#projectタグを持つすべてのノートを一覧表示して」
+- 「先週の月曜日のデイリーノートを取得して」
+- 「アクティブなノートの'タスク'セクションを更新して」
+- 「Obsidian APIサーバーの状態を確認して」
 
 ## 設定
 

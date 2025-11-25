@@ -33,11 +33,16 @@
 | `complex_search` | 使用 JsonLogic 查詢進行進階篩選搜尋 |
 | `get_recent_changes` | 取得最近修改的檔案（需要 Dataview 外掛） |
 | `get_periodic_note` | 取得今天的日記/週記/月記（需要 Periodic Notes 外掛） |
-| `get_recent_periodic_notes` | 取得最近的週期性筆記 |
+| `get_periodic_note_by_date` | 取得特定日期的週期性筆記（需要 Periodic Notes 外掛） |
+| `get_recent_periodic_notes` | 取得最近的週期性筆記（需要 Dataview 外掛） |
 | `open_note` | 在 Obsidian UI 中開啟筆記 |
 | `get_active_note` | 取得目前活動的筆記 |
 | `update_active_note` | 更新活動筆記的內容 |
 | `append_active_note` | 向活動筆記附加內容 |
+| `patch_active_note` | 更新活動筆記的特定區段 |
+| `delete_active_note` | 刪除目前活動的筆記 |
+| `server_status` | 取得 Obsidian Local REST API 伺服器狀態 |
+| `dataview_query` | 執行 Dataview DQL 查詢（需要 Dataview 外掛） |
 | `vector_search` | 使用自然語言進行語意搜尋（需要 vector extras） |
 | `find_similar_notes` | 尋找與指定筆記相似的筆記（需要 vector extras） |
 | `vector_status` | 取得向量搜尋索引的狀態（需要 vector extras） |

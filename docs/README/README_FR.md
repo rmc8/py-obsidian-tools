@@ -33,11 +33,16 @@ Le serveur implémente plusieurs outils pour interagir avec Obsidian :
 | `complex_search` | Recherche avec requêtes JsonLogic pour filtrage avancé |
 | `get_recent_changes` | Obtient les fichiers récemment modifiés (nécessite le plugin Dataview) |
 | `get_periodic_note` | Obtient la note quotidienne/hebdomadaire/mensuelle d'aujourd'hui (nécessite le plugin Periodic Notes) |
-| `get_recent_periodic_notes` | Obtient les notes périodiques récentes |
+| `get_periodic_note_by_date` | Obtient la note périodique d'une date spécifique (nécessite le plugin Periodic Notes) |
+| `get_recent_periodic_notes` | Obtient les notes périodiques récentes (nécessite le plugin Dataview) |
 | `open_note` | Ouvre une note dans l'interface d'Obsidian |
 | `get_active_note` | Obtient la note actuellement active |
 | `update_active_note` | Met à jour le contenu de la note active |
 | `append_active_note` | Ajoute du contenu à la note active |
+| `patch_active_note` | Met à jour une section spécifique de la note active |
+| `delete_active_note` | Supprime la note actuellement active |
+| `server_status` | Obtient l'état du serveur Obsidian Local REST API |
+| `dataview_query` | Exécute des requêtes Dataview DQL (nécessite le plugin Dataview) |
 | `vector_search` | Recherche sémantique en langage naturel (nécessite vector extras) |
 | `find_similar_notes` | Trouve des notes similaires à une note spécifiée (nécessite vector extras) |
 | `vector_status` | Obtient l'état de l'index de recherche vectorielle (nécessite vector extras) |
