@@ -27,7 +27,7 @@ class ObsidianConfig(BaseSettings):
         description="Obsidian Local REST API host",
     )
     port: int = Field(
-        default=27123,
+        default=27124,
         description="Obsidian Local REST API port",
     )
     protocol: str = Field(
