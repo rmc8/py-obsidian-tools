@@ -69,11 +69,7 @@
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ OBSIDIAN_PORT=27123
 MacOS：`~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 Windows：`%APPDATA%/Claude/claude_desktop_config.json`
+
+**建議：從 PyPI 安裝（uvx）**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>開發/未發布伺服器設定</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 在使用向量搜尋之前，您需要建立保險庫的索引：
 
 ```bash
+# 方法 1：已安裝的情況下
 pyobsidian-index full --verbose
+
+# 方法 2：使用 uvx（無需安裝）
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### CLI 指令

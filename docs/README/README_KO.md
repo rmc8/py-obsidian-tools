@@ -69,11 +69,7 @@ Obsidian REST API 키로 환경을 설정하는 두 가지 방법이 있습니�
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ Obsidian REST API 커뮤니티 플러그인이 실행 중이어야 합니다: ht
 MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+**권장: PyPI에서 설치 (uvx)**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>개발/미게시 서버 설정</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 벡터 검색을 사용하기 전에 볼트의 인덱스를 생성해야 합니다:
 
 ```bash
+# 설치되어 있는 경우
 pyobsidian-index full --verbose
+
+# uvx 사용 (설치 불필요)
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### CLI 명령

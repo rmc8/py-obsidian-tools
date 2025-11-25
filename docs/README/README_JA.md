@@ -69,11 +69,7 @@ Obsidian REST APIキーで環境を設定する方法は2つあります。
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ Obsidian REST APIコミュニティプラグインが実行されている必要
 MacOSの場合：`~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 Windowsの場合：`%APPDATA%/Claude/claude_desktop_config.json`
+
+**推奨：PyPIからインストール（uvx）**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>開発/未公開サーバー設定</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 ベクトル検索を使用する前に、Vaultのインデックスを作成する必要があります：
 
 ```bash
+# 方法1：インストール済みの場合
 pyobsidian-index full --verbose
+
+# 方法2：uvxを使用（インストール不要）
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### CLIコマンド

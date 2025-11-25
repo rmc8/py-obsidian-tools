@@ -69,11 +69,7 @@ Obsidian REST API कुंजी के साथ एनवायरनमे�
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ OBSIDIAN_PORT=27123
 MacOS पर: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
+
+**अनुशंसित: PyPI से इंस्टॉल करें (uvx)**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>डेवलपमेंट/अनपब्लिश्ड सर्वर्स कॉन्फ़िगरेशन</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 वेक्टर सर्च का उपयोग करने से पहले, आपको अपने वॉल्ट का इंडेक्स बनाना होगा:
 
 ```bash
+# विधि 1: यदि पहले से स्थापित हो
 pyobsidian-index full --verbose
+
+# विधि 2: uvx का उपयोग (इंस्टॉलेशन आवश्यक नहीं)
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### CLI कमांड्स

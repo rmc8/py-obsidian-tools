@@ -69,11 +69,7 @@ Es gibt zwei Möglichkeiten, die Umgebung mit dem Obsidian REST API-Schlüssel z
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ Installieren und aktivieren Sie es in den Einstellungen und kopieren Sie den API
 Auf MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 Auf Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+**Empfohlen: Von PyPI installieren (uvx)**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>Entwicklungs-/Unveröffentlichte Server-Konfiguration</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 Bevor Sie die Vektorsuche verwenden, müssen Sie einen Index Ihres Vaults erstellen:
 
 ```bash
+# Methode 1: Falls bereits installiert
 pyobsidian-index full --verbose
+
+# Methode 2: Mit uvx (keine Installation erforderlich)
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### CLI-Befehle

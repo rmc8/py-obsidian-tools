@@ -1,13 +1,11 @@
 [project]
-name = "pyobsidianmcp"
-version = "0.1.0"
+name = "py-obsidian-mcp"
+version = "0.1.1"
 description = "MCP server for Obsidian via Local REST API"
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
-authors = [
-    { name = "rmc8" }
-]
+authors = [{ name = "rmc8" }]
 keywords = ["mcp", "obsidian", "ai", "llm", "claude"]
 dependencies = [
     "httpx>=0.28.1",
@@ -22,10 +20,7 @@ pyobsidianmcp = "src.main:main"
 pyobsidian-index = "src.indexer:main"
 
 [project.optional-dependencies]
-vector = [
-    "chromadb>=0.4.0",
-    "semantic-text-splitter>=0.18.0",
-]
+vector = ["chromadb>=0.4.0", "semantic-text-splitter>=0.18.0"]
 vector-openai = [
     "chromadb>=0.4.0",
     "semantic-text-splitter>=0.18.0",
@@ -54,10 +49,7 @@ Homepage = "https://github.com/rmc8/pyobsidianmcp"
 Repository = "https://github.com/rmc8/pyobsidianmcp"
 
 [dependency-groups]
-dev = [
-    "isort>=7.0.0",
-    "ruff>=0.14.6",
-]
+dev = ["isort>=7.0.0", "ruff>=0.14.6"]
 
 [build-system]
 requires = ["hatchling"]

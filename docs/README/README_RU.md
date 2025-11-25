@@ -69,11 +69,7 @@ MCP-сервер для взаимодействия с Obsidian через пл
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ OBSIDIAN_PORT=27123
 На MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 На Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+**Рекомендуется: Установка из PyPI (uvx)**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>Конфигурация для разработки/неопубликованных серверов</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 Перед использованием векторного поиска необходимо создать индекс вашего хранилища:
 
 ```bash
+# Метод 1: Если уже установлено
 pyobsidian-index full --verbose
+
+# Метод 2: Используя uvx (установка не требуется)
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### CLI-команды

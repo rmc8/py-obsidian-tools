@@ -69,11 +69,7 @@ Hay dos formas de configurar el entorno con la clave API de Obsidian REST.
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": [
-        "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
-      ],
+      "args": ["pyobsidianmcp"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -112,6 +108,24 @@ Instálalo y habilítalo en los ajustes y copia la clave API.
 En MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 
 En Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+**Recomendado: Instalar desde PyPI (uvx)**
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": ["pyobsidianmcp"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
 
 <details>
   <summary>Configuración de Servidores de Desarrollo/No Publicados</summary>
@@ -180,7 +194,11 @@ pip install "pyobsidianmcp[vector-all]"
 Antes de usar la búsqueda vectorial, necesitas crear un índice de tu vault:
 
 ```bash
+# Método 1: Si ya está instalado
 pyobsidian-index full --verbose
+
+# Método 2: Usando uvx (sin instalación requerida)
+uvx --from pyobsidianmcp pyobsidian-index full --verbose
 ```
 
 ### Comandos CLI
