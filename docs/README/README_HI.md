@@ -67,13 +67,13 @@ Obsidian REST API कुंजी के साथ एनवायरनमे�
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27123"
+        "OBSIDIAN_PORT": "27124"
       }
     }
   }
@@ -85,12 +85,12 @@ Obsidian REST API कुंजी के साथ एनवायरनमे�
 ```
 OBSIDIAN_API_KEY=your_api_key_here
 OBSIDIAN_HOST=127.0.0.1
-OBSIDIAN_PORT=27123
+OBSIDIAN_PORT=27124
 ```
 
 नोट:
 - आप Obsidian प्लगइन कॉन्फ़िग में API कुंजी पा सकते हैं (Settings > Local REST API > Security)
-- डिफ़ॉल्ट पोर्ट 27123 है
+- डिफ़ॉल्ट पोर्ट 27124 है
 - डिफ़ॉल्ट होस्ट 127.0.0.1 (localhost) है
 
 ## क्विक स्टार्ट
@@ -114,13 +114,13 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27123"
+        "OBSIDIAN_PORT": "27124"
       }
     }
   }
@@ -133,7 +133,7 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uv",
       "args": [
         "--directory",
@@ -156,7 +156,7 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": [
         "--from",

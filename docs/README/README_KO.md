@@ -67,13 +67,13 @@ Obsidian REST API 키로 환경을 설정하는 두 가지 방법이 있습니�
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27123"
+        "OBSIDIAN_PORT": "27124"
       }
     }
   }
@@ -85,12 +85,12 @@ Obsidian REST API 키로 환경을 설정하는 두 가지 방법이 있습니�
 ```
 OBSIDIAN_API_KEY=your_api_key_here
 OBSIDIAN_HOST=127.0.0.1
-OBSIDIAN_PORT=27123
+OBSIDIAN_PORT=27124
 ```
 
 참고:
 - Obsidian 플러그인 설정에서 API 키를 찾을 수 있습니다 (설정 > Local REST API > 보안)
-- 기본 포트는 27123입니다
+- 기본 포트는 27124입니다
 - 기본 호스트는 127.0.0.1 (localhost)입니다
 
 ## 빠른 시작
@@ -114,13 +114,13 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27123"
+        "OBSIDIAN_PORT": "27124"
       }
     }
   }
@@ -133,7 +133,7 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uv",
       "args": [
         "--directory",
@@ -156,7 +156,7 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": [
         "--from",

@@ -67,13 +67,13 @@ There are two ways to configure the environment with the Obsidian REST API Key.
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27123"
+        "OBSIDIAN_PORT": "27124"
       }
     }
   }
@@ -85,12 +85,12 @@ There are two ways to configure the environment with the Obsidian REST API Key.
 ```
 OBSIDIAN_API_KEY=your_api_key_here
 OBSIDIAN_HOST=127.0.0.1
-OBSIDIAN_PORT=27123
+OBSIDIAN_PORT=27124
 ```
 
 Note:
 - You can find the API key in the Obsidian plugin config (Settings > Local REST API > Security)
-- Default port is 27123
+- Default port is 27124
 - Default host is 127.0.0.1 (localhost)
 
 ## Quickstart
@@ -114,13 +114,13 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
-        "OBSIDIAN_PORT": "27123"
+        "OBSIDIAN_PORT": "27124"
       }
     }
   }
@@ -133,7 +133,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uv",
       "args": [
         "--directory",
@@ -156,7 +156,7 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```json
 {
   "mcpServers": {
-    "obsidian": {
+    "obsidian-tools": {
       "command": "uvx",
       "args": [
         "--from",
