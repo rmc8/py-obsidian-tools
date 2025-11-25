@@ -33,8 +33,6 @@ The server implements multiple tools to interact with Obsidian:
 | `complex_search` | Search using JsonLogic queries for advanced filtering |
 | `get_recent_changes` | Get recently modified files (requires Dataview plugin) |
 | `get_periodic_note` | Get today's daily/weekly/monthly note (requires Periodic Notes plugin) |
-| `get_periodic_note_by_date` | Get a periodic note for a specific date (requires Periodic Notes plugin) |
-| `get_recent_periodic_notes` | Get recent periodic notes (requires Dataview plugin) |
 | `open_note` | Open a note in Obsidian's UI |
 | `get_active_note` | Get the currently active note |
 | `update_active_note` | Update the active note's content |
@@ -61,7 +59,7 @@ You can use prompts like this:
 - "Search for notes about machine learning using semantic search"
 - "Find notes similar to my project plan"
 - "Run a Dataview query to list all notes with the tag #project"
-- "Get my daily note from last Monday"
+- "Get today's daily note"
 - "Update the 'Tasks' section of the active note"
 - "Check the Obsidian API server status"
 

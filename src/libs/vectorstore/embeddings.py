@@ -5,7 +5,8 @@ from abc import ABC, abstractmethod
 from chromadb import Documents, EmbeddingFunction, Embeddings
 
 from ..config import VectorConfig
-from ..exceptions import EmbeddingProviderError
+from ..exceptions import (EmbeddingAPIError, EmbeddingConnectionError,
+                          EmbeddingProviderError, EmbeddingTimeoutError)
 
 
 class BaseEmbeddingProvider(EmbeddingFunction, ABC):
@@ -39,6 +40,8 @@ class DefaultEmbeddingProvider(BaseEmbeddingProvider):
 
     def __call__(self, input: Documents) -> Embeddings:
         """Convert texts to embedding vectors."""
+        if not input:
+            return []
         return self._ef(input)
 
     @property
@@ -62,6 +65,9 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
 
     def __call__(self, input: Documents) -> Embeddings:
         """Convert texts to embedding vectors."""
+        if not input:
+            return []
+
         import httpx
 
         embeddings: list[list[float]] = []
@@ -78,6 +84,14 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
                     embeddings.append(embedding)
                     if self._dimension is None and embedding:
                         self._dimension = len(embedding)
+        except httpx.ConnectError as e:
+            raise EmbeddingConnectionError(
+                f"Cannot connect to Ollama at {self._host}: {e}"
+            ) from e
+        except httpx.TimeoutException as e:
+            raise EmbeddingTimeoutError(f"Ollama request timed out: {e}") from e
+        except httpx.HTTPStatusError as e:
+            raise EmbeddingAPIError(f"Ollama HTTP error: {e}") from e
         except httpx.HTTPError as e:
             raise EmbeddingProviderError(f"Ollama API error: {e}") from e
         return embeddings
@@ -107,6 +121,9 @@ class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
 
     def __call__(self, input: Documents) -> Embeddings:
         """Convert texts to embedding vectors."""
+        if not input:
+            return []
+
         try:
             from openai import OpenAI
         except ImportError:
@@ -118,8 +135,10 @@ class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
             client = OpenAI(api_key=self._api_key)
             response = client.embeddings.create(input=list(input), model=self._model)
             return [item.embedding for item in response.data]
+        except ImportError:
+            raise
         except Exception as e:
-            raise EmbeddingProviderError(f"OpenAI API error: {e}") from e
+            raise EmbeddingAPIError(f"OpenAI API error: {e}") from e
 
     @property
     def dimension(self) -> int:
@@ -141,6 +160,9 @@ class GoogleEmbeddingProvider(BaseEmbeddingProvider):
 
     def __call__(self, input: Documents) -> Embeddings:
         """Convert texts to embedding vectors."""
+        if not input:
+            return []
+
         try:
             import google.generativeai as genai
         except ImportError:
@@ -159,8 +181,10 @@ class GoogleEmbeddingProvider(BaseEmbeddingProvider):
                 )
                 embeddings.append(result["embedding"])
             return embeddings
+        except ImportError:
+            raise
         except Exception as e:
-            raise EmbeddingProviderError(f"Google AI API error: {e}") from e
+            raise EmbeddingAPIError(f"Google AI API error: {e}") from e
 
     @property
     def dimension(self) -> int:
@@ -182,6 +206,9 @@ class CohereEmbeddingProvider(BaseEmbeddingProvider):
 
     def __call__(self, input: Documents) -> Embeddings:
         """Convert texts to embedding vectors."""
+        if not input:
+            return []
+
         try:
             import cohere
         except ImportError:
@@ -197,8 +224,10 @@ class CohereEmbeddingProvider(BaseEmbeddingProvider):
                 input_type="search_document",
             )
             return [list(emb) for emb in response.embeddings]
+        except ImportError:
+            raise
         except Exception as e:
-            raise EmbeddingProviderError(f"Cohere API error: {e}") from e
+            raise EmbeddingAPIError(f"Cohere API error: {e}") from e
 
     @property
     def dimension(self) -> int:

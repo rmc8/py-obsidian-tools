@@ -47,6 +47,29 @@ class ObsidianVectorStore:
 
         # Thread pool for async wrappers
         self._executor = ThreadPoolExecutor(max_workers=4)
+        self._closed = False
+
+    def close(self) -> None:
+        """Cleanup resources (ThreadPoolExecutor)."""
+        if not self._closed:
+            self._executor.shutdown(wait=True)
+            self._closed = True
+
+    def __enter__(self) -> "ObsidianVectorStore":
+        """Context manager entry."""
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
+        """Context manager exit - cleanup resources."""
+        self.close()
+
+    async def __aenter__(self) -> "ObsidianVectorStore":
+        """Async context manager entry."""
+        return self
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+        """Async context manager exit - cleanup resources."""
+        self.close()
 
     def _get_collection(self) -> chromadb.Collection:
         """Get or create the ChromaDB collection."""
@@ -479,7 +502,7 @@ class ObsidianVectorStore:
         mtime: float,
     ) -> int:
         """Async wrapper for index_note."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self._executor,
             self.index_note,
@@ -494,7 +517,7 @@ class ObsidianVectorStore:
         progress_callback: Callable | None = None,
     ) -> dict:
         """Async wrapper for index_vault."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self._executor,
             self.index_vault,
@@ -504,7 +527,7 @@ class ObsidianVectorStore:
 
     async def async_delete_note(self, path: str) -> int:
         """Async wrapper for delete_note."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self._executor,
             self.delete_note,
@@ -513,7 +536,7 @@ class ObsidianVectorStore:
 
     async def async_clear_index(self) -> None:
         """Async wrapper for clear_index."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         await loop.run_in_executor(
             self._executor,
             self.clear_index,
@@ -521,7 +544,7 @@ class ObsidianVectorStore:
 
     async def async_get_status(self) -> IndexStatus:
         """Async wrapper for get_status."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self._executor,
             self.get_status,
@@ -534,7 +557,7 @@ class ObsidianVectorStore:
         folder: str | None = None,
     ) -> list[VectorSearchResult]:
         """Async wrapper for search."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self._executor,
             self.search,
@@ -549,7 +572,7 @@ class ObsidianVectorStore:
         n_results: int = 5,
     ) -> list[VectorSearchResult]:
         """Async wrapper for find_similar."""
-        loop = asyncio.get_event_loop()
+        loop = asyncio.get_running_loop()
         return await loop.run_in_executor(
             self._executor,
             self.find_similar,

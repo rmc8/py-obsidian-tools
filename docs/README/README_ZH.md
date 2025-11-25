@@ -33,8 +33,6 @@
 | `complex_search` | 使用 JsonLogic 查询进行高级过滤搜索 |
 | `get_recent_changes` | 获取最近修改的文件（需要 Dataview 插件） |
 | `get_periodic_note` | 获取今天的日记/周记/月记（需要 Periodic Notes 插件） |
-| `get_periodic_note_by_date` | 获取特定日期的周期性笔记（需要 Periodic Notes 插件） |
-| `get_recent_periodic_notes` | 获取最近的周期性笔记（需要 Dataview 插件） |
 | `open_note` | 在 Obsidian UI 中打开笔记 |
 | `get_active_note` | 获取当前活动的笔记 |
 | `update_active_note` | 更新活动笔记的内容 |
@@ -61,7 +59,7 @@
 - "使用语义搜索查找关于机器学习的笔记"
 - "查找与我的项目计划相似的笔记"
 - "运行 Dataview 查询列出所有带有 #project 标签的笔记"
-- "获取上周一的日记"
+- "获取今天的日记"
 - "更新活动笔记的'任务'部分"
 - "检查 Obsidian API 服务器状态"
 

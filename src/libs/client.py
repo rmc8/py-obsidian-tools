@@ -7,7 +7,8 @@ import httpx
 
 from .config import ObsidianConfig
 from .exceptions import (ObsidianAPIError, ObsidianAuthError,
-                         ObsidianConnectionError, ObsidianNotFoundError)
+                         ObsidianConnectionError, ObsidianNotFoundError,
+                         ObsidianRateLimitError, ObsidianTimeoutError)
 from .models import CommandInfo, NoteContent, SearchMatch, SearchResult
 
 
@@ -82,6 +83,10 @@ class ObsidianClient:
                 raise ObsidianAuthError(
                     "Authentication failed. Check your OBSIDIAN_API_KEY."
                 ) from e
+            if status_code == 429:
+                raise ObsidianRateLimitError(
+                    "Rate limit exceeded. Please try again later."
+                ) from e
             raise ObsidianAPIError(
                 f"HTTP {status_code}: {e.response.text[:200]}"
             ) from e
@@ -92,11 +97,33 @@ class ObsidianClient:
                 "Ensure Obsidian is running with Local REST API plugin enabled."
             ) from e
 
+        except httpx.TimeoutException as e:
+            raise ObsidianTimeoutError(
+                f"Request timed out for {endpoint}. "
+                "The server may be busy or unresponsive."
+            ) from e
+
         except httpx.RequestError as e:
             error_msg = str(e) if str(e) else f"{type(e).__name__}"
             if hasattr(e, "request") and e.request:
                 error_msg += f" for {e.request.url}"
             raise ObsidianAPIError(f"Request error: {error_msg}") from e
+
+    def _process_target(self, target_type: str, target: str) -> str:
+        """Process target for PATCH operations.
+
+        Args:
+            target_type: Type of target (heading, block, frontmatter).
+            target: Target identifier.
+
+        Returns:
+            Processed target string, URL encoded.
+        """
+        processed = target
+        if target_type == "heading":
+            # Remove leading # markers for headings
+            processed = target.lstrip("#").strip()
+        return quote(processed)
 
     # ========== Vault Operations ==========
 
@@ -177,13 +204,7 @@ class ObsidianClient:
             operation: "append", "prepend", or "replace"
         """
         encoded_path = quote(path, safe="/")
-
-        # For headings, remove leading # markers if present
-        processed_target = target
-        if target_type == "heading":
-            processed_target = target.lstrip("#").strip()
-
-        encoded_target = quote(processed_target)  # URL encode for non-ASCII characters
+        encoded_target = self._process_target(target_type, target)
         await self._request(
             "PATCH",
             f"/vault/{encoded_path}",
@@ -312,12 +333,7 @@ class ObsidianClient:
             target: Target identifier (heading text without # markers, block ID, or frontmatter field)
             operation: "append", "prepend", or "replace"
         """
-        # For headings, remove leading # markers if present
-        processed_target = target
-        if target_type == "heading":
-            processed_target = target.lstrip("#").strip()
-
-        encoded_target = quote(processed_target)
+        encoded_target = self._process_target(target_type, target)
         await self._request(
             "PATCH",
             "/active/",

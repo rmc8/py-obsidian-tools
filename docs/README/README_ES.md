@@ -33,8 +33,6 @@ El servidor implementa múltiples herramientas para interactuar con Obsidian:
 | `complex_search` | Búsqueda con consultas JsonLogic para filtrado avanzado |
 | `get_recent_changes` | Obtiene archivos modificados recientemente (requiere plugin Dataview) |
 | `get_periodic_note` | Obtiene la nota diaria/semanal/mensual de hoy (requiere plugin Periodic Notes) |
-| `get_periodic_note_by_date` | Obtiene la nota periódica de una fecha específica (requiere plugin Periodic Notes) |
-| `get_recent_periodic_notes` | Obtiene notas periódicas recientes (requiere plugin Dataview) |
 | `open_note` | Abre una nota en la interfaz de Obsidian |
 | `get_active_note` | Obtiene la nota actualmente activa |
 | `update_active_note` | Actualiza el contenido de la nota activa |

@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from .exceptions import ObsidianConfigError, VectorConfigError
@@ -28,12 +28,22 @@ class ObsidianConfig(BaseSettings):
     )
     port: int = Field(
         default=27124,
+        ge=1,
+        le=65535,
         description="Obsidian Local REST API port",
     )
     protocol: str = Field(
         default="https",
         description="Protocol (http or https)",
     )
+
+    @field_validator("protocol")
+    @classmethod
+    def validate_protocol(cls, v: str) -> str:
+        """Validate that protocol is http or https."""
+        if v.lower() not in ("http", "https"):
+            raise ValueError("Protocol must be 'http' or 'https'")
+        return v.lower()
 
     @property
     def base_url(self) -> str:

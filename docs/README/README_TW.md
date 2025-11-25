@@ -33,8 +33,6 @@
 | `complex_search` | 使用 JsonLogic 查詢進行進階篩選搜尋 |
 | `get_recent_changes` | 取得最近修改的檔案（需要 Dataview 外掛） |
 | `get_periodic_note` | 取得今天的日記/週記/月記（需要 Periodic Notes 外掛） |
-| `get_periodic_note_by_date` | 取得特定日期的週期性筆記（需要 Periodic Notes 外掛） |
-| `get_recent_periodic_notes` | 取得最近的週期性筆記（需要 Dataview 外掛） |
 | `open_note` | 在 Obsidian UI 中開啟筆記 |
 | `get_active_note` | 取得目前活動的筆記 |
 | `update_active_note` | 更新活動筆記的內容 |

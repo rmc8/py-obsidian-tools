@@ -25,6 +25,18 @@ class ObsidianConnectionError(ObsidianAPIError):
     pass
 
 
+class ObsidianTimeoutError(ObsidianAPIError):
+    """Timeout error when communicating with Obsidian API."""
+
+    pass
+
+
+class ObsidianRateLimitError(ObsidianAPIError):
+    """Rate limit exceeded (HTTP 429)."""
+
+    pass
+
+
 class ObsidianConfigError(ObsidianAPIError):
     """Configuration errors (missing or invalid settings)."""
 
@@ -47,7 +59,25 @@ class IndexNotFoundError(VectorStoreError):
 
 
 class EmbeddingProviderError(VectorStoreError):
-    """Embedding provider errors (connection, API, model issues)."""
+    """Base exception for embedding provider errors."""
+
+    pass
+
+
+class EmbeddingConnectionError(EmbeddingProviderError):
+    """Cannot connect to embedding provider service."""
+
+    pass
+
+
+class EmbeddingTimeoutError(EmbeddingProviderError):
+    """Embedding API request timed out."""
+
+    pass
+
+
+class EmbeddingAPIError(EmbeddingProviderError):
+    """Embedding API returned an error response."""
 
     pass
 
