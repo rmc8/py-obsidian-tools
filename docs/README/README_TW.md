@@ -38,6 +38,9 @@
 | `get_active_note` | 取得目前活動的筆記 |
 | `update_active_note` | 更新活動筆記的內容 |
 | `append_active_note` | 向活動筆記附加內容 |
+| `vector_search` | 使用自然語言進行語意搜尋（需要 vector extras） |
+| `find_similar_notes` | 尋找與指定筆記相似的筆記（需要 vector extras） |
+| `vector_status` | 取得向量搜尋索引的狀態（需要 vector extras） |
 
 ### 範例提示
 
@@ -50,6 +53,8 @@
 - 「在我的日記中附加『TODO: 審查PR』」
 - 「取得活動筆記的內容並進行評論」
 - 「使用 complex search 尋找 Work 資料夾中的所有 markdown 檔案」
+- 「使用語意搜尋尋找關於機器學習的筆記」
+- 「尋找與我的專案計劃相似的筆記」
 
 ## 設定
 
@@ -152,6 +157,74 @@ Windows：`%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 </details>
+
+## 向量搜尋（選用）
+
+使用 ChromaDB 的語意搜尋功能。此功能允許在整個保險庫中進行自然語言查詢。
+
+### 安裝
+
+```bash
+# 基礎（本地嵌入 - 無需 API 金鑰）
+pip install "pyobsidianmcp[vector]"
+
+# 使用外部嵌入提供商
+pip install "pyobsidianmcp[vector-openai]"
+pip install "pyobsidianmcp[vector-google]"
+pip install "pyobsidianmcp[vector-cohere]"
+pip install "pyobsidianmcp[vector-all]"
+```
+
+### 建立索引
+
+在使用向量搜尋之前，您需要建立保險庫的索引：
+
+```bash
+pyobsidian-index full --verbose
+```
+
+### CLI 指令
+
+| 指令 | 說明 |
+|------|------|
+| `pyobsidian-index full` | 索引保險庫中的所有筆記 |
+| `pyobsidian-index update` | 增量更新（僅新建/修改的筆記） |
+| `pyobsidian-index clear` | 清除整個索引 |
+| `pyobsidian-index status` | 顯示索引狀態 |
+
+### 環境變數
+
+```bash
+VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
+VECTOR_CHROMA_PATH=~/.obsidian-vector
+VECTOR_CHUNK_SIZE=512
+
+# Ollama
+VECTOR_OLLAMA_HOST=http://localhost:11434
+VECTOR_OLLAMA_MODEL=nomic-embed-text
+
+# OpenAI
+VECTOR_OPENAI_API_KEY=sk-xxx
+VECTOR_OPENAI_MODEL=text-embedding-3-small
+
+# Google
+VECTOR_GOOGLE_API_KEY=xxx
+VECTOR_GOOGLE_MODEL=embedding-001
+
+# Cohere
+VECTOR_COHERE_API_KEY=xxx
+VECTOR_COHERE_MODEL=embed-multilingual-v3.0
+```
+
+### 嵌入提供商
+
+| 提供商 | 模型 | 最適合 |
+|--------|------|--------|
+| default | all-MiniLM-L6-v2 | 快速、免費、完全本地 |
+| ollama | nomic-embed-text | 高品質、本地 |
+| openai | text-embedding-3-small | 最高品質、多語言 |
+| google | embedding-001 | Google AI 整合 |
+| cohere | embed-multilingual-v3.0 | 多語言專業 |
 
 ## 開發
 

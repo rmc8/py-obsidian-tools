@@ -19,6 +19,35 @@ dependencies = [
 
 [project.scripts]
 pyobsidianmcp = "src.main:main"
+pyobsidian-index = "src.indexer:main"
+
+[project.optional-dependencies]
+vector = [
+    "chromadb>=0.4.0",
+    "semantic-text-splitter>=0.18.0",
+]
+vector-openai = [
+    "chromadb>=0.4.0",
+    "semantic-text-splitter>=0.18.0",
+    "openai>=1.0.0",
+]
+vector-google = [
+    "chromadb>=0.4.0",
+    "semantic-text-splitter>=0.18.0",
+    "google-generativeai>=0.3.0",
+]
+vector-cohere = [
+    "chromadb>=0.4.0",
+    "semantic-text-splitter>=0.18.0",
+    "cohere>=5.0.0",
+]
+vector-all = [
+    "chromadb>=0.4.0",
+    "semantic-text-splitter>=0.18.0",
+    "openai>=1.0.0",
+    "google-generativeai>=0.3.0",
+    "cohere>=5.0.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/rmc8/pyobsidianmcp"

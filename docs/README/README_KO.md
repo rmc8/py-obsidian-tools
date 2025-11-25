@@ -38,6 +38,9 @@ Local REST API 커뮤니티 플러그인을 통해 Obsidian과 상호작용하�
 | `get_active_note` | 현재 활성 노트 가져오기 |
 | `update_active_note` | 활성 노트의 내용 업데이트 |
 | `append_active_note` | 활성 노트에 내용 추가 |
+| `vector_search` | 자연어를 사용한 의미 검색 (vector extras 필요) |
+| `find_similar_notes` | 지정된 노트와 유사한 노트 찾기 (vector extras 필요) |
+| `vector_status` | 벡터 검색 인덱스 상태 가져오기 (vector extras 필요) |
 
 ### 예시 프롬프트
 
@@ -50,6 +53,8 @@ Local REST API 커뮤니티 플러그인을 통해 Obsidian과 상호작용하�
 - "내 일일 노트에 'TODO: PR 검토'를 추가해줘"
 - "활성 노트의 내용을 가져와서 비평해줘"
 - "complex search를 사용하여 Work 폴더의 모든 markdown 파일을 찾아줘"
+- "의미 검색을 사용하여 머신러닝에 관한 노트를 검색해줘"
+- "내 프로젝트 계획과 비슷한 노트를 찾아줘"
 
 ## 설정
 
@@ -152,6 +157,74 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 </details>
+
+## 벡터 검색 (선택 사항)
+
+ChromaDB를 사용한 의미 검색 기능입니다. 이 기능을 사용하면 볼트 전체에서 자연어 쿼리가 가능합니다.
+
+### 설치
+
+```bash
+# 기본 (로컬 임베딩 - API 키 불필요)
+pip install "pyobsidianmcp[vector]"
+
+# 외부 임베딩 제공자 사용
+pip install "pyobsidianmcp[vector-openai]"
+pip install "pyobsidianmcp[vector-google]"
+pip install "pyobsidianmcp[vector-cohere]"
+pip install "pyobsidianmcp[vector-all]"
+```
+
+### 인덱스 생성
+
+벡터 검색을 사용하기 전에 볼트의 인덱스를 생성해야 합니다:
+
+```bash
+pyobsidian-index full --verbose
+```
+
+### CLI 명령
+
+| 명령 | 설명 |
+|------|------|
+| `pyobsidian-index full` | 볼트의 모든 노트 인덱싱 |
+| `pyobsidian-index update` | 증분 업데이트 (신규/수정된 노트만) |
+| `pyobsidian-index clear` | 전체 인덱스 삭제 |
+| `pyobsidian-index status` | 인덱스 상태 표시 |
+
+### 환경 변수
+
+```bash
+VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
+VECTOR_CHROMA_PATH=~/.obsidian-vector
+VECTOR_CHUNK_SIZE=512
+
+# Ollama용
+VECTOR_OLLAMA_HOST=http://localhost:11434
+VECTOR_OLLAMA_MODEL=nomic-embed-text
+
+# OpenAI용
+VECTOR_OPENAI_API_KEY=sk-xxx
+VECTOR_OPENAI_MODEL=text-embedding-3-small
+
+# Google용
+VECTOR_GOOGLE_API_KEY=xxx
+VECTOR_GOOGLE_MODEL=embedding-001
+
+# Cohere용
+VECTOR_COHERE_API_KEY=xxx
+VECTOR_COHERE_MODEL=embed-multilingual-v3.0
+```
+
+### 임베딩 제공자
+
+| 제공자 | 모델 | 최적 용도 |
+|--------|------|----------|
+| default | all-MiniLM-L6-v2 | 빠름, 무료, 완전 로컬 |
+| ollama | nomic-embed-text | 고품질, 로컬 |
+| openai | text-embedding-3-small | 최고 품질, 다국어 |
+| google | embedding-001 | Google AI 통합 |
+| cohere | embed-multilingual-v3.0 | 다국어 전문 |
 
 ## 개발
 
