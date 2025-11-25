@@ -1,0 +1,179 @@
+🌐 **Language / 言語**: [English](../../README.md) | [简体中文](README_ZH.md) | [繁體中文](README_TW.md) | [Español](README_ES.md) | [Français](README_FR.md) | [Português](README_PT.md) | [Deutsch](README_DE.md) | [Русский](README_RU.md) | [日本語](README_JA.md) | [한국어](README_KO.md) | [हिन्दी](README_HI.md)
+
+[![Python](https://img.shields.io/badge/python-3.13+-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat)](../../LICENSE)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-blueviolet?style=flat)](https://modelcontextprotocol.io/)
+[![GitHub stars](https://img.shields.io/github/stars/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/commits)
+
+# PyObsidianMCP
+
+Local REST API 커뮤니티 플러그인을 통해 Obsidian과 상호작용하는 MCP 서버입니다.
+
+## 구성 요소
+
+### 도구
+
+서버는 Obsidian과 상호작용하기 위한 여러 도구를 구현합니다:
+
+| 도구 | 설명 |
+|------|------|
+| `list_notes` | 볼트 또는 특정 디렉토리의 모든 노트 목록 |
+| `read_note` | 특정 노트의 내용 읽기 |
+| `search_notes` | 특정 텍스트를 포함한 노트 검색 |
+| `create_note` | 선택적 frontmatter를 포함한 새 노트 생성 |
+| `update_note` | 노트의 전체 내용 업데이트(교체) |
+| `append_note` | 노트 끝에 내용 추가 |
+| `delete_note` | 볼트에서 노트 삭제 |
+| `patch_note` | 특정 섹션(제목/블록/frontmatter) 업데이트 |
+| `list_commands` | 사용 가능한 모든 Obsidian 명령 목록 |
+| `execute_command` | Obsidian 명령 실행 |
+| `batch_read_notes` | 여러 노트를 한 번에 읽기 |
+| `complex_search` | 고급 필터링을 위한 JsonLogic 쿼리 검색 |
+| `get_recent_changes` | 최근 수정된 파일 가져오기 (Dataview 플러그인 필요) |
+| `get_periodic_note` | 오늘의 일간/주간/월간 노트 가져오기 (Periodic Notes 플러그인 필요) |
+| `get_recent_periodic_notes` | 최근 주기적 노트 가져오기 |
+| `open_note` | Obsidian UI에서 노트 열기 |
+| `get_active_note` | 현재 활성 노트 가져오기 |
+| `update_active_note` | 활성 노트의 내용 업데이트 |
+| `append_active_note` | 활성 노트에 내용 추가 |
+
+### 예시 프롬프트
+
+먼저 Claude에게 Obsidian을 사용하도록 지시하는 것이 좋습니다. 그러면 항상 도구를 호출합니다.
+
+다음과 같은 프롬프트를 사용할 수 있습니다:
+- "'Daily' 폴더의 모든 노트를 나열해줘"
+- "'프로젝트 X'를 언급하는 모든 노트를 검색하고 요약해줘"
+- "우리 토론 내용으로 '회의 노트'라는 새 노트를 만들어줘"
+- "내 일일 노트에 'TODO: PR 검토'를 추가해줘"
+- "활성 노트의 내용을 가져와서 비평해줘"
+- "complex search를 사용하여 Work 폴더의 모든 markdown 파일을 찾아줘"
+
+## 설정
+
+### Obsidian REST API 키
+
+Obsidian REST API 키로 환경을 설정하는 두 가지 방법이 있습니다.
+
+1. 서버 설정에 추가 (권장)
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/rmc8/PyObsidianMCP",
+        "pyobsidianmcp"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
+```
+
+2. 작업 디렉토리에 다음 필수 변수를 포함한 `.env` 파일 생성:
+
+```
+OBSIDIAN_API_KEY=your_api_key_here
+OBSIDIAN_HOST=127.0.0.1
+OBSIDIAN_PORT=27123
+```
+
+참고:
+- Obsidian 플러그인 설정에서 API 키를 찾을 수 있습니다 (설정 > Local REST API > 보안)
+- 기본 포트는 27123입니다
+- 기본 호스트는 127.0.0.1 (localhost)입니다
+
+## 빠른 시작
+
+### 설치
+
+#### Obsidian REST API
+
+Obsidian REST API 커뮤니티 플러그인이 실행 중이어야 합니다: https://github.com/coddingtonbear/obsidian-local-rest-api
+
+설정에서 설치하고 활성화한 후 API 키를 복사하세요.
+
+#### Claude Desktop
+
+MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+
+Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+<details>
+  <summary>개발/미게시 서버 설정</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/pyobsidianmcp",
+        "run",
+        "pyobsidianmcp"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>"
+      }
+    }
+  }
+}
+```
+</details>
+
+<details>
+  <summary>GitHub에서 설치 (uvx)</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/rmc8/PyObsidianMCP",
+        "pyobsidianmcp"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>"
+      }
+    }
+  }
+}
+```
+</details>
+
+## 개발
+
+### 빌드
+
+패키지 배포 준비:
+
+1. 의존성 동기화 및 잠금 파일 업데이트:
+```bash
+uv sync
+```
+
+### 디버깅
+
+MCP 서버는 stdio를 통해 실행되므로 디버깅이 어려울 수 있습니다. 최상의 디버깅 경험을 위해 [MCP Inspector](https://github.com/modelcontextprotocol/inspector) 사용을 강력히 권장합니다.
+
+다음 명령으로 `npx`를 통해 MCP Inspector를 시작할 수 있습니다:
+
+```bash
+npx @modelcontextprotocol/inspector uv --directory /path/to/pyobsidianmcp run pyobsidianmcp
+```
+
+시작 후 Inspector가 브라우저에서 접속하여 디버깅을 시작할 수 있는 URL을 표시합니다.
+
+서버 로그를 확인하거나 (설정된 경우) 표준 Python 로깅을 사용할 수도 있습니다.

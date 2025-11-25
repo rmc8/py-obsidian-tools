@@ -1,96 +1,21 @@
+🌐 **Language / 言語**: [English](README.md) | [简体中文](docs/README/README_ZH.md) | [繁體中文](docs/README/README_TW.md) | [Español](docs/README/README_ES.md) | [Français](docs/README/README_FR.md) | [Português](docs/README/README_PT.md) | [Deutsch](docs/README/README_DE.md) | [Русский](docs/README/README_RU.md) | [日本語](docs/README/README_JA.md) | [한국어](docs/README/README_KO.md) | [हिन्दी](docs/README/README_HI.md)
+
+[![Python](https://img.shields.io/badge/python-3.13+-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat)](LICENSE)
+[![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-blueviolet?style=flat)](https://modelcontextprotocol.io/)
+[![GitHub stars](https://img.shields.io/github/stars/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/commits)
+
 # PyObsidianMCP
 
-MCP server for Obsidian via Local REST API - enables AI assistants like Claude to interact with your Obsidian vault.
+MCP server to interact with Obsidian via the Local REST API community plugin.
 
-## Features
+## Components
 
-- **19 MCP Tools** for complete Obsidian vault management
-- **Async HTTP** with httpx for optimal performance
-- **UVX Ready** - install and run with a single command
-- **Type Safe** - Pydantic models throughout
+### Tools
 
-## Prerequisites
-
-1. **Obsidian** with [Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api) plugin installed and enabled
-2. **API Key** from Obsidian Settings > Local REST API > Security
-
-## Installation
-
-### Using uvx (Recommended)
-
-```bash
-uvx pyobsidianmcp
-```
-
-### Using pip
-
-```bash
-pip install pyobsidianmcp
-```
-
-### From source
-
-```bash
-git clone https://github.com/rmc8/pyobsidianmcp
-cd pyobsidianmcp
-uv sync
-```
-
-## Configuration
-
-### Environment Variables
-
-Create a `.env` file or set environment variables:
-
-```bash
-# Required
-OBSIDIAN_API_KEY=your-api-key-here
-
-# Optional (defaults shown)
-OBSIDIAN_HOST=localhost
-OBSIDIAN_PORT=27123
-OBSIDIAN_PROTOCOL=http
-```
-
-### Claude Desktop
-
-Add to your Claude Desktop config (`claude_desktop_config.json`):
-
-```json
-{
-  "mcpServers": {
-    "obsidian": {
-      "command": "uvx",
-      "args": ["pyobsidianmcp"],
-      "env": {
-        "OBSIDIAN_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-### Claude Code
-
-Add to your `.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "obsidian": {
-      "command": "uvx",
-      "args": ["pyobsidianmcp"],
-      "env": {
-        "OBSIDIAN_API_KEY": "your-api-key-here"
-      }
-    }
-  }
-}
-```
-
-## Available Tools
-
-### Tier 1: Basic Operations
+The server implements multiple tools to interact with Obsidian:
 
 | Tool | Description |
 |------|-------------|
@@ -98,28 +23,13 @@ Add to your `.mcp.json`:
 | `read_note` | Read the content of a specific note |
 | `search_notes` | Search for notes containing specific text |
 | `create_note` | Create a new note with optional frontmatter |
-
-### Tier 2: CRUD Completion
-
-| Tool | Description |
-|------|-------------|
 | `update_note` | Update (replace) the entire content of a note |
 | `append_note` | Append content to the end of a note |
-| `delete_note` | Delete a note from the vault (requires `confirm=True`) |
-
-### Tier 3: Advanced Operations
-
-| Tool | Description |
-|------|-------------|
+| `delete_note` | Delete a note from the vault |
 | `patch_note` | Update a specific section (heading/block/frontmatter) |
 | `list_commands` | List all available Obsidian commands |
 | `execute_command` | Execute an Obsidian command |
-
-### Tier 4: Extended Operations
-
-| Tool | Description |
-|------|-------------|
-| `batch_read_notes` | Read multiple notes at once (comma-separated paths) |
+| `batch_read_notes` | Read multiple notes at once |
 | `complex_search` | Search using JsonLogic queries for advanced filtering |
 | `get_recent_changes` | Get recently modified files (requires Dataview plugin) |
 | `get_periodic_note` | Get today's daily/weekly/monthly note (requires Periodic Notes plugin) |
@@ -129,101 +39,141 @@ Add to your `.mcp.json`:
 | `update_active_note` | Update the active note's content |
 | `append_active_note` | Append content to the active note |
 
-## Usage Examples
+### Example prompts
 
-### List notes in a directory
+It is good to first instruct Claude to use Obsidian. Then it will always call the tool.
 
-```
-list_notes(directory="daily/2024")
-```
+You can use prompts like this:
+- "List all notes in the 'Daily' folder"
+- "Search for all notes mentioning 'Project X' and summarize them"
+- "Create a new note called 'Meeting Notes' with the content of our discussion"
+- "Append 'TODO: Review PR' to my daily note"
+- "Get the content of the active note and critique it"
+- "Find all markdown files in the Work folder using complex search"
 
-### Create a note with frontmatter
+## Configuration
 
-```
-create_note(
-    path="notes/my-note.md",
-    content="# My Note\n\nContent here...",
-    frontmatter='{"title": "My Note", "tags": ["tag1", "tag2"]}'
-)
-```
+### Obsidian REST API Key
 
-### Search for notes
+There are two ways to configure the environment with the Obsidian REST API Key.
 
-```
-search_notes(query="project ideas")
-```
+1. Add to server config (preferred)
 
-### Patch a specific section
-
-```
-patch_note(
-    path="notes/my-note.md",
-    content="Updated content",
-    target_type="heading",
-    target="## Section Name",
-    operation="replace"
-)
-```
-
-### Delete a note (with confirmation)
-
-```
-delete_note(path="notes/old-note.md", confirm=True)
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/rmc8/PyObsidianMCP",
+        "pyobsidianmcp"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27123"
+      }
+    }
+  }
+}
 ```
 
-### Read multiple notes at once
+2. Create a `.env` file in the working directory with the following required variables:
 
 ```
-batch_read_notes(paths="daily/2024-01-01.md,daily/2024-01-02.md,daily/2024-01-03.md")
+OBSIDIAN_API_KEY=your_api_key_here
+OBSIDIAN_HOST=127.0.0.1
+OBSIDIAN_PORT=27123
 ```
 
-### Complex search with JsonLogic
+Note:
+- You can find the API key in the Obsidian plugin config (Settings > Local REST API > Security)
+- Default port is 27123
+- Default host is 127.0.0.1 (localhost)
 
-```
-# Find all markdown files in Work folder
-complex_search(query='{"glob": ["Work/**/*.md", {"var": "path"}]}')
+## Quickstart
 
-# Find notes with specific tag
-complex_search(query='{"in": ["project", {"var": "tags"}]}')
-```
+### Install
 
-### Get today's daily note
+#### Obsidian REST API
 
-```
-get_periodic_note(period="daily")
-```
+You need the Obsidian REST API community plugin running: https://github.com/coddingtonbear/obsidian-local-rest-api
 
-### Get recently modified files
+Install and enable it in the settings and copy the API key.
 
+#### Claude Desktop
+
+On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+
+On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+<details>
+  <summary>Development/Unpublished Servers Configuration</summary>
+  
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "/path/to/pyobsidianmcp",
+        "run",
+        "pyobsidianmcp"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>"
+      }
+    }
+  }
+}
 ```
-get_recent_changes(limit=10, days=7)
+</details>
+
+<details>
+  <summary>Install from GitHub (uvx)</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/rmc8/PyObsidianMCP",
+        "pyobsidianmcp"
+      ],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>"
+      }
+    }
+  }
+}
 ```
+</details>
 
 ## Development
 
+### Building
+
+To prepare the package for distribution:
+
+1. Sync dependencies and update lockfile:
 ```bash
-# Install dependencies
-uv sync --dev
-
-# Run linter
-uv run ruff check src/
-
-# Run with auto-fix
-uv run ruff check --fix src/
-
-# Sort imports
-uv run isort src/
-
-# Run locally
-uv run pyobsidianmcp
+uv sync
 ```
 
-## License
+### Debugging
 
-MIT License - Copyright (c) 2025 rmc8
+Since MCP servers run over stdio, debugging can be challenging. For the best debugging experience, we strongly recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
 
-## Links
+You can launch the MCP Inspector via `npx` with this command:
 
-- [Obsidian Local REST API](https://github.com/coddingtonbear/obsidian-local-rest-api)
-- [Model Context Protocol](https://modelcontextprotocol.io/)
-- [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk)
+```bash
+npx @modelcontextprotocol/inspector uv --directory /path/to/pyobsidianmcp run pyobsidianmcp
+```
+
+Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
+
+You can also watch the server logs (if configured) or use standard python logging.
