@@ -1,0 +1,247 @@
+"""Embedding providers for vector search."""
+
+from abc import ABC, abstractmethod
+
+from chromadb import Documents, EmbeddingFunction, Embeddings
+
+from ..config import VectorConfig
+from ..exceptions import EmbeddingProviderError
+
+
+class BaseEmbeddingProvider(EmbeddingFunction, ABC):
+    """Base class for embedding providers."""
+
+    @abstractmethod
+    def __call__(self, input: Documents) -> Embeddings:
+        """Convert texts to embedding vectors."""
+        pass
+
+    @property
+    @abstractmethod
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        pass
+
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Return the provider name."""
+        pass
+
+
+class DefaultEmbeddingProvider(BaseEmbeddingProvider):
+    """Default embedding provider using ChromaDB's built-in all-MiniLM-L6-v2."""
+
+    def __init__(self) -> None:
+        from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
+
+        self._ef = DefaultEmbeddingFunction()
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Convert texts to embedding vectors."""
+        return self._ef(input)
+
+    @property
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        return 384
+
+    @property
+    def name(self) -> str:
+        """Return the provider name."""
+        return "default"
+
+
+class OllamaEmbeddingProvider(BaseEmbeddingProvider):
+    """Embedding provider using Ollama local models."""
+
+    def __init__(self, host: str, model: str) -> None:
+        self._host = host
+        self._model = model
+        self._dimension: int | None = None
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Convert texts to embedding vectors."""
+        import httpx
+
+        embeddings: list[list[float]] = []
+        try:
+            with httpx.Client(timeout=60.0) as client:
+                for text in input:
+                    response = client.post(
+                        f"{self._host}/api/embeddings",
+                        json={"model": self._model, "prompt": text},
+                    )
+                    response.raise_for_status()
+                    data = response.json()
+                    embedding = data.get("embedding", [])
+                    embeddings.append(embedding)
+                    if self._dimension is None and embedding:
+                        self._dimension = len(embedding)
+        except httpx.HTTPError as e:
+            raise EmbeddingProviderError(f"Ollama API error: {e}") from e
+        return embeddings
+
+    @property
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        return self._dimension or 768
+
+    @property
+    def name(self) -> str:
+        """Return the provider name."""
+        return "ollama"
+
+
+class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
+    """Embedding provider using OpenAI API."""
+
+    def __init__(self, api_key: str, model: str) -> None:
+        self._api_key = api_key
+        self._model = model
+        self._dimensions = {
+            "text-embedding-3-small": 1536,
+            "text-embedding-3-large": 3072,
+            "text-embedding-ada-002": 1536,
+        }
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Convert texts to embedding vectors."""
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise EmbeddingProviderError(
+                "openai package not installed. Install with: pip install 'pyobsidianmcp[vector-openai]'"
+            )
+
+        try:
+            client = OpenAI(api_key=self._api_key)
+            response = client.embeddings.create(input=list(input), model=self._model)
+            return [item.embedding for item in response.data]
+        except Exception as e:
+            raise EmbeddingProviderError(f"OpenAI API error: {e}") from e
+
+    @property
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        return self._dimensions.get(self._model, 1536)
+
+    @property
+    def name(self) -> str:
+        """Return the provider name."""
+        return "openai"
+
+
+class GoogleEmbeddingProvider(BaseEmbeddingProvider):
+    """Embedding provider using Google Generative AI API."""
+
+    def __init__(self, api_key: str, model: str) -> None:
+        self._api_key = api_key
+        self._model = model
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Convert texts to embedding vectors."""
+        try:
+            import google.generativeai as genai
+        except ImportError:
+            raise EmbeddingProviderError(
+                "google-generativeai package not installed. Install with: pip install 'pyobsidianmcp[vector-google]'"
+            )
+
+        try:
+            genai.configure(api_key=self._api_key)
+            embeddings: list[list[float]] = []
+            for text in input:
+                result = genai.embed_content(
+                    model=f"models/{self._model}",
+                    content=text,
+                    task_type="retrieval_document",
+                )
+                embeddings.append(result["embedding"])
+            return embeddings
+        except Exception as e:
+            raise EmbeddingProviderError(f"Google AI API error: {e}") from e
+
+    @property
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        return 768
+
+    @property
+    def name(self) -> str:
+        """Return the provider name."""
+        return "google"
+
+
+class CohereEmbeddingProvider(BaseEmbeddingProvider):
+    """Embedding provider using Cohere API."""
+
+    def __init__(self, api_key: str, model: str) -> None:
+        self._api_key = api_key
+        self._model = model
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Convert texts to embedding vectors."""
+        try:
+            import cohere
+        except ImportError:
+            raise EmbeddingProviderError(
+                "cohere package not installed. Install with: pip install 'pyobsidianmcp[vector-cohere]'"
+            )
+
+        try:
+            client = cohere.Client(self._api_key)
+            response = client.embed(
+                texts=list(input),
+                model=self._model,
+                input_type="search_document",
+            )
+            return [list(emb) for emb in response.embeddings]
+        except Exception as e:
+            raise EmbeddingProviderError(f"Cohere API error: {e}") from e
+
+    @property
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        return 1024
+
+    @property
+    def name(self) -> str:
+        """Return the provider name."""
+        return "cohere"
+
+
+def get_embedding_provider(config: VectorConfig) -> BaseEmbeddingProvider:
+    """Factory function to create embedding provider based on config."""
+    provider = config.provider
+
+    if provider == "default":
+        return DefaultEmbeddingProvider()
+    elif provider == "ollama":
+        return OllamaEmbeddingProvider(
+            host=config.ollama_host,
+            model=config.ollama_model,
+        )
+    elif provider == "openai":
+        if not config.openai_api_key:
+            raise EmbeddingProviderError("OpenAI API key is required")
+        return OpenAIEmbeddingProvider(
+            api_key=config.openai_api_key,
+            model=config.openai_model,
+        )
+    elif provider == "google":
+        if not config.google_api_key:
+            raise EmbeddingProviderError("Google API key is required")
+        return GoogleEmbeddingProvider(
+            api_key=config.google_api_key,
+            model=config.google_model,
+        )
+    elif provider == "cohere":
+        if not config.cohere_api_key:
+            raise EmbeddingProviderError("Cohere API key is required")
+        return CohereEmbeddingProvider(
+            api_key=config.cohere_api_key,
+            model=config.cohere_model,
+        )
+    else:
+        raise EmbeddingProviderError(f"Unknown provider: {provider}")

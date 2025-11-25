@@ -38,6 +38,9 @@ Local REST APIコミュニティプラグインを介してObsidianと連携す�
 | `get_active_note` | 現在アクティブなノートを取得 |
 | `update_active_note` | アクティブなノートの内容を更新 |
 | `append_active_note` | アクティブなノートにコンテンツを追加 |
+| `vector_search` | 自然言語を使用したセマンティック検索（vector extrasが必要） |
+| `find_similar_notes` | 指定したノートに類似したノートを検索（vector extrasが必要） |
+| `vector_status` | ベクトル検索インデックスの状態を取得（vector extrasが必要） |
 
 ### プロンプト例
 
@@ -50,6 +53,8 @@ Local REST APIコミュニティプラグインを介してObsidianと連携す�
 - 「デイリーノートに'TODO: PRをレビュー'を追記して」
 - 「アクティブなノートの内容を取得して批評して」
 - 「complex searchを使用してWorkフォルダ内のすべてのmarkdownファイルを検索して」
+- 「セマンティック検索を使用して機械学習に関するノートを検索して」
+- 「私のプロジェクト計画に似ているノートを探して」
 
 ## 設定
 
@@ -152,6 +157,74 @@ Windowsの場合：`%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 </details>
+
+## ベクトル検索（オプション）
+
+ChromaDBを使用したセマンティック検索機能です。この機能により、Vault全体で自然言語クエリが可能になります。
+
+### インストール
+
+```bash
+# 基本（ローカル埋め込み - APIキー不要）
+pip install "pyobsidianmcp[vector]"
+
+# 外部埋め込みプロバイダーを使用する場合
+pip install "pyobsidianmcp[vector-openai]"
+pip install "pyobsidianmcp[vector-google]"
+pip install "pyobsidianmcp[vector-cohere]"
+pip install "pyobsidianmcp[vector-all]"
+```
+
+### インデックスの作成
+
+ベクトル検索を使用する前に、Vaultのインデックスを作成する必要があります：
+
+```bash
+pyobsidian-index full --verbose
+```
+
+### CLIコマンド
+
+| コマンド | 説明 |
+|---------|------|
+| `pyobsidian-index full` | Vault内のすべてのノートをインデックス |
+| `pyobsidian-index update` | 差分更新（新規/変更されたノートのみ） |
+| `pyobsidian-index clear` | インデックス全体をクリア |
+| `pyobsidian-index status` | インデックスの状態を表示 |
+
+### 環境変数
+
+```bash
+VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
+VECTOR_CHROMA_PATH=~/.obsidian-vector
+VECTOR_CHUNK_SIZE=512
+
+# Ollama用
+VECTOR_OLLAMA_HOST=http://localhost:11434
+VECTOR_OLLAMA_MODEL=nomic-embed-text
+
+# OpenAI用
+VECTOR_OPENAI_API_KEY=sk-xxx
+VECTOR_OPENAI_MODEL=text-embedding-3-small
+
+# Google用
+VECTOR_GOOGLE_API_KEY=xxx
+VECTOR_GOOGLE_MODEL=embedding-001
+
+# Cohere用
+VECTOR_COHERE_API_KEY=xxx
+VECTOR_COHERE_MODEL=embed-multilingual-v3.0
+```
+
+### 埋め込みプロバイダー
+
+| プロバイダー | モデル | 用途 |
+|-------------|--------|------|
+| default | all-MiniLM-L6-v2 | 高速、無料、完全ローカル |
+| ollama | nomic-embed-text | 高品質、ローカル |
+| openai | text-embedding-3-small | 最高品質、多言語 |
+| google | embedding-001 | Google AI連携 |
+| cohere | embed-multilingual-v3.0 | 多言語特化 |
 
 ## 開発
 

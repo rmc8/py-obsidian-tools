@@ -1,5 +1,6 @@
 """Pydantic models for Obsidian Local REST API."""
 
+from datetime import datetime
 from typing import Any
 
 from pydantic import BaseModel, Field
@@ -53,3 +54,45 @@ class VaultInfo(BaseModel):
     """Information about files in the vault."""
 
     files: list[str] = Field(default_factory=list, description="List of file paths")
+
+
+# Vector search models
+
+
+class NoteChunk(BaseModel):
+    """Metadata for a note chunk stored in ChromaDB."""
+
+    path: str = Field(..., description="Note path (e.g., 'Projects/MyProject.md')")
+    folder: str = Field(..., description="Parent folder (e.g., 'Projects')")
+    title: str = Field(..., description="Note title (e.g., 'MyProject')")
+    mtime: float = Field(..., description="Last modified time (Unix timestamp)")
+    chunk_index: int = Field(..., ge=0, description="Chunk number (0-indexed)")
+    total_chunks: int = Field(..., ge=1, description="Total chunks in note")
+
+
+class VectorSearchResult(BaseModel):
+    """A single result from vector search."""
+
+    path: str = Field(..., description="Note path")
+    title: str = Field(..., description="Note title")
+    folder: str = Field(..., description="Parent folder")
+    score: float = Field(..., ge=0.0, le=1.0, description="Similarity score (0-1)")
+    content_preview: str = Field(
+        ..., max_length=200, description="Content preview (max 200 chars)"
+    )
+    chunk_index: int = Field(..., ge=0, description="Chunk number")
+    total_chunks: int = Field(..., ge=1, description="Total chunks in note")
+
+
+class IndexStatus(BaseModel):
+    """Status of the vector search index."""
+
+    collection_name: str = Field(..., description="ChromaDB collection name")
+    total_documents: int = Field(..., ge=0, description="Total chunks indexed")
+    total_notes: int = Field(..., ge=0, description="Total notes indexed")
+    embedding_provider: str = Field(..., description="Active embedding provider")
+    embedding_dimension: int = Field(..., gt=0, description="Embedding dimension")
+    last_updated: datetime | None = Field(
+        default=None, description="Last index update time"
+    )
+    chroma_path: str = Field(..., description="ChromaDB storage path")

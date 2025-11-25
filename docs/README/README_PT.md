@@ -38,6 +38,9 @@ O servidor implementa múltiplas ferramentas para interagir com o Obsidian:
 | `get_active_note` | Obtém a nota atualmente ativa |
 | `update_active_note` | Atualiza o conteúdo da nota ativa |
 | `append_active_note` | Adiciona conteúdo à nota ativa |
+| `vector_search` | Pesquisa semântica usando linguagem natural (requer vector extras) |
+| `find_similar_notes` | Encontra notas similares a uma nota especificada (requer vector extras) |
+| `vector_status` | Obtém o status do índice de pesquisa vetorial (requer vector extras) |
 
 ### Exemplos de prompts
 
@@ -50,6 +53,8 @@ Você pode usar prompts como estes:
 - "Adicione 'TODO: Revisar PR' à minha nota diária"
 - "Obtenha o conteúdo da nota ativa e critique-o"
 - "Encontre todos os arquivos markdown na pasta Work usando complex search"
+- "Pesquise notas sobre aprendizado de máquina usando pesquisa semântica"
+- "Encontre notas semelhantes ao meu plano de projeto"
 
 ## Configuração
 
@@ -152,6 +157,74 @@ No Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 </details>
+
+## Pesquisa Vetorial (Opcional)
+
+Funcionalidade de pesquisa semântica usando ChromaDB. Este recurso permite consultas em linguagem natural em todo o seu vault.
+
+### Instalação
+
+```bash
+# Básico (embeddings locais - não requer chave API)
+pip install "pyobsidianmcp[vector]"
+
+# Com provedores de embeddings externos
+pip install "pyobsidianmcp[vector-openai]"
+pip install "pyobsidianmcp[vector-google]"
+pip install "pyobsidianmcp[vector-cohere]"
+pip install "pyobsidianmcp[vector-all]"
+```
+
+### Criar Índice
+
+Antes de usar a pesquisa vetorial, você precisa criar um índice do seu vault:
+
+```bash
+pyobsidian-index full --verbose
+```
+
+### Comandos CLI
+
+| Comando | Descrição |
+|---------|-----------|
+| `pyobsidian-index full` | Indexar todas as notas do vault |
+| `pyobsidian-index update` | Atualização incremental (apenas notas novas/modificadas) |
+| `pyobsidian-index clear` | Limpar todo o índice |
+| `pyobsidian-index status` | Mostrar status do índice |
+
+### Variáveis de Ambiente
+
+```bash
+VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
+VECTOR_CHROMA_PATH=~/.obsidian-vector
+VECTOR_CHUNK_SIZE=512
+
+# Para Ollama
+VECTOR_OLLAMA_HOST=http://localhost:11434
+VECTOR_OLLAMA_MODEL=nomic-embed-text
+
+# Para OpenAI
+VECTOR_OPENAI_API_KEY=sk-xxx
+VECTOR_OPENAI_MODEL=text-embedding-3-small
+
+# Para Google
+VECTOR_GOOGLE_API_KEY=xxx
+VECTOR_GOOGLE_MODEL=embedding-001
+
+# Para Cohere
+VECTOR_COHERE_API_KEY=xxx
+VECTOR_COHERE_MODEL=embed-multilingual-v3.0
+```
+
+### Provedores de Embeddings
+
+| Provedor | Modelo | Melhor Para |
+|----------|--------|-------------|
+| default | all-MiniLM-L6-v2 | Rápido, gratuito, totalmente local |
+| ollama | nomic-embed-text | Alta qualidade, local |
+| openai | text-embedding-3-small | Melhor qualidade, multilíngue |
+| google | embedding-001 | Integração Google AI |
+| cohere | embed-multilingual-v3.0 | Especialização multilíngue |
 
 ## Desenvolvimento
 

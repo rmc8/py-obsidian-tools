@@ -38,6 +38,9 @@ The server implements multiple tools to interact with Obsidian:
 | `get_active_note` | Get the currently active note |
 | `update_active_note` | Update the active note's content |
 | `append_active_note` | Append content to the active note |
+| `vector_search` | Semantic search across notes using natural language (requires vector extras) |
+| `find_similar_notes` | Find notes similar to a specified note (requires vector extras) |
+| `vector_status` | Get status of the vector search index (requires vector extras) |
 
 ### Example prompts
 
@@ -50,6 +53,8 @@ You can use prompts like this:
 - "Append 'TODO: Review PR' to my daily note"
 - "Get the content of the active note and critique it"
 - "Find all markdown files in the Work folder using complex search"
+- "Search for notes about machine learning using semantic search"
+- "Find notes similar to my project plan"
 
 ## Configuration
 
@@ -152,6 +157,74 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 }
 ```
 </details>
+
+## Vector Search (Optional)
+
+Semantic search functionality using ChromaDB. This feature allows natural language queries across your vault.
+
+### Installation
+
+```bash
+# Basic (local embeddings - no API key required)
+pip install "pyobsidianmcp[vector]"
+
+# With external embedding providers
+pip install "pyobsidianmcp[vector-openai]"
+pip install "pyobsidianmcp[vector-google]"
+pip install "pyobsidianmcp[vector-cohere]"
+pip install "pyobsidianmcp[vector-all]"
+```
+
+### Create Index
+
+Before using vector search, you need to create an index of your vault:
+
+```bash
+pyobsidian-index full --verbose
+```
+
+### CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `pyobsidian-index full` | Index all notes in the vault |
+| `pyobsidian-index update` | Incremental update (new/modified notes only) |
+| `pyobsidian-index clear` | Clear the entire index |
+| `pyobsidian-index status` | Show index status |
+
+### Environment Variables
+
+```bash
+VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
+VECTOR_CHROMA_PATH=~/.obsidian-vector
+VECTOR_CHUNK_SIZE=512
+
+# For Ollama
+VECTOR_OLLAMA_HOST=http://localhost:11434
+VECTOR_OLLAMA_MODEL=nomic-embed-text
+
+# For OpenAI
+VECTOR_OPENAI_API_KEY=sk-xxx
+VECTOR_OPENAI_MODEL=text-embedding-3-small
+
+# For Google
+VECTOR_GOOGLE_API_KEY=xxx
+VECTOR_GOOGLE_MODEL=embedding-001
+
+# For Cohere
+VECTOR_COHERE_API_KEY=xxx
+VECTOR_COHERE_MODEL=embed-multilingual-v3.0
+```
+
+### Embedding Providers
+
+| Provider | Model | Best For |
+|----------|-------|----------|
+| default | all-MiniLM-L6-v2 | Fast, free, completely local |
+| ollama | nomic-embed-text | High quality, local |
+| openai | text-embedding-3-small | Best quality, multilingual |
+| google | embedding-001 | Google AI integration |
+| cohere | embed-multilingual-v3.0 | Multilingual specialization |
 
 ## Development
 

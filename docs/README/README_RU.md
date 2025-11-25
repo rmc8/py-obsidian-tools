@@ -38,6 +38,9 @@ MCP-сервер для взаимодействия с Obsidian через пл
 | `get_active_note` | Получение текущей активной заметки |
 | `update_active_note` | Обновление содержимого активной заметки |
 | `append_active_note` | Добавление содержимого к активной заметке |
+| `vector_search` | Семантический поиск на естественном языке (требуется vector extras) |
+| `find_similar_notes` | Поиск заметок, похожих на указанную (требуется vector extras) |
+| `vector_status` | Получение статуса индекса векторного поиска (требуется vector extras) |
 
 ### Примеры промптов
 
@@ -50,6 +53,8 @@ MCP-сервер для взаимодействия с Obsidian через пл
 - "Добавь 'TODO: Проверить PR' в мою ежедневную заметку"
 - "Получи содержимое активной заметки и дай критику"
 - "Найди все markdown-файлы в папке Work, используя complex search"
+- "Поиск заметок о машинном обучении с помощью семантического поиска"
+- "Найди заметки, похожие на мой план проекта"
 
 ## Конфигурация
 
@@ -152,6 +157,74 @@ OBSIDIAN_PORT=27123
 }
 ```
 </details>
+
+## Векторный поиск (Опционально)
+
+Функция семантического поиска с использованием ChromaDB. Эта функция позволяет выполнять запросы на естественном языке по всему вашему хранилищу.
+
+### Установка
+
+```bash
+# Базовая (локальные эмбеддинги - API-ключ не требуется)
+pip install "pyobsidianmcp[vector]"
+
+# С внешними провайдерами эмбеддингов
+pip install "pyobsidianmcp[vector-openai]"
+pip install "pyobsidianmcp[vector-google]"
+pip install "pyobsidianmcp[vector-cohere]"
+pip install "pyobsidianmcp[vector-all]"
+```
+
+### Создание индекса
+
+Перед использованием векторного поиска необходимо создать индекс вашего хранилища:
+
+```bash
+pyobsidian-index full --verbose
+```
+
+### CLI-команды
+
+| Команда | Описание |
+|---------|----------|
+| `pyobsidian-index full` | Индексировать все заметки в хранилище |
+| `pyobsidian-index update` | Инкрементальное обновление (только новые/изменённые заметки) |
+| `pyobsidian-index clear` | Очистить весь индекс |
+| `pyobsidian-index status` | Показать статус индекса |
+
+### Переменные окружения
+
+```bash
+VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
+VECTOR_CHROMA_PATH=~/.obsidian-vector
+VECTOR_CHUNK_SIZE=512
+
+# Для Ollama
+VECTOR_OLLAMA_HOST=http://localhost:11434
+VECTOR_OLLAMA_MODEL=nomic-embed-text
+
+# Для OpenAI
+VECTOR_OPENAI_API_KEY=sk-xxx
+VECTOR_OPENAI_MODEL=text-embedding-3-small
+
+# Для Google
+VECTOR_GOOGLE_API_KEY=xxx
+VECTOR_GOOGLE_MODEL=embedding-001
+
+# Для Cohere
+VECTOR_COHERE_API_KEY=xxx
+VECTOR_COHERE_MODEL=embed-multilingual-v3.0
+```
+
+### Провайдеры эмбеддингов
+
+| Провайдер | Модель | Оптимально для |
+|-----------|--------|----------------|
+| default | all-MiniLM-L6-v2 | Быстрый, бесплатный, полностью локальный |
+| ollama | nomic-embed-text | Высокое качество, локальный |
+| openai | text-embedding-3-small | Лучшее качество, многоязычный |
+| google | embedding-001 | Интеграция с Google AI |
+| cohere | embed-multilingual-v3.0 | Специализация на многоязычности |
 
 ## Разработка
 

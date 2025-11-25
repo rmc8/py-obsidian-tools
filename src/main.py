@@ -4,7 +4,11 @@ import json
 
 from mcp.server.fastmcp import FastMCP
 
-from .libs import ObsidianAPIError, ObsidianClient, ObsidianConfigError, load_config
+from .libs import (ObsidianAPIError, ObsidianClient, ObsidianConfigError,
+                   load_config)
+from .libs.config import load_vector_config
+from .libs.exceptions import (IndexNotFoundError, VectorConfigError,
+                              VectorStoreError)
 
 # Initialize FastMCP server
 mcp = FastMCP("obsidian")
@@ -735,6 +739,187 @@ async def append_active_note(content: str) -> str:
         return f"Configuration Error: {e}"
     except ObsidianAPIError as e:
         return f"Error: {e}"
+
+
+# ============================================================
+# Tier 5: Vector Search Operations
+# ============================================================
+
+
+def _get_vector_store():
+    """Get the vector store instance (lazy initialization)."""
+    try:
+        from .libs.vectorstore.store import ObsidianVectorStore
+
+        config = get_config()
+        vector_config = load_vector_config()
+        return ObsidianVectorStore(vector_config, config)
+    except ImportError:
+        raise VectorConfigError(
+            "Vector search dependencies not installed. "
+            "Install with: pip install 'pyobsidianmcp[vector]'"
+        )
+
+
+@mcp.tool()
+async def vector_search(
+    query: str,
+    n_results: int = 10,
+    folder: str | None = None,
+) -> str:
+    """Perform semantic search across Obsidian vault.
+
+    Args:
+        query: Natural language search query
+        n_results: Number of results to return (1-100, default: 10)
+        folder: Optional folder filter (e.g., "Projects")
+
+    Returns:
+        JSON string with search results including path, score, and preview
+    """
+    try:
+        store = _get_vector_store()
+        results = await store.async_search(query, n_results, folder)
+
+        return json.dumps(
+            {
+                "results": [r.model_dump() for r in results],
+                "total": len(results),
+                "query": query,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    except IndexNotFoundError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "IndexNotFoundError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+    except VectorConfigError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "ConfigurationError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+    except VectorStoreError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "VectorStoreError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+
+
+@mcp.tool()
+async def find_similar_notes(
+    path: str,
+    n_results: int = 5,
+) -> str:
+    """Find notes similar to a specified note.
+
+    Args:
+        path: Path to the source note (e.g., "Projects/MyProject.md")
+        n_results: Number of similar notes to return (1-50, default: 5)
+
+    Returns:
+        JSON string with similar notes including path, score, and preview
+    """
+    try:
+        store = _get_vector_store()
+        results = await store.async_find_similar(path, n_results)
+
+        return json.dumps(
+            {
+                "source_note": path,
+                "similar_notes": [r.model_dump() for r in results],
+                "total": len(results),
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    except IndexNotFoundError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "IndexNotFoundError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+    except VectorConfigError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "ConfigurationError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+    except VectorStoreError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "VectorStoreError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+
+
+@mcp.tool()
+async def vector_status() -> str:
+    """Get the status of the vector search index.
+
+    Returns:
+        JSON string with index status including document count,
+        embedding provider, and last update time
+    """
+    try:
+        store = _get_vector_store()
+        status = await store.async_get_status()
+
+        status_dict = status.model_dump()
+        # Convert datetime to string for JSON
+        if status_dict.get("last_updated"):
+            status_dict["last_updated"] = status_dict["last_updated"].isoformat()
+
+        # Add status field
+        if status.total_documents > 0:
+            status_dict["status"] = "ready"
+        else:
+            status_dict["status"] = "empty"
+
+        return json.dumps(status_dict, ensure_ascii=False, indent=2)
+
+    except VectorConfigError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "ConfigurationError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
+    except VectorStoreError as e:
+        return json.dumps(
+            {
+                "error": True,
+                "error_type": "VectorStoreError",
+                "message": str(e),
+            },
+            ensure_ascii=False,
+        )
 
 
 # ============================================================

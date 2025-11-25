@@ -29,3 +29,30 @@ class ObsidianConfigError(ObsidianAPIError):
     """Configuration errors (missing or invalid settings)."""
 
     pass
+
+
+# Vector search exceptions
+
+
+class VectorStoreError(Exception):
+    """Base exception for vector store errors."""
+
+    pass
+
+
+class IndexNotFoundError(VectorStoreError):
+    """Vector index not found or not initialized."""
+
+    pass
+
+
+class EmbeddingProviderError(VectorStoreError):
+    """Embedding provider errors (connection, API, model issues)."""
+
+    pass
+
+
+class VectorConfigError(VectorStoreError):
+    """Vector search configuration errors."""
+
+    pass
