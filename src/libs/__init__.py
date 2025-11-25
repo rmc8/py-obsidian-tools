@@ -1,4 +1,4 @@
-"""Library modules for PyObsidianMCP."""
+"""Library modules for py-obsidian-tools."""
 
 from .client import ObsidianClient
 from .config import ObsidianConfig, load_config

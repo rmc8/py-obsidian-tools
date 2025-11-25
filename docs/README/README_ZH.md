@@ -3,11 +3,11 @@
 [![Python](https://img.shields.io/badge/python-3.13+-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green?style=flat)](../../LICENSE)
 [![MCP](https://img.shields.io/badge/MCP-Model%20Context%20Protocol-blueviolet?style=flat)](https://modelcontextprotocol.io/)
-[![GitHub stars](https://img.shields.io/github/stars/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/stargazers)
-[![GitHub issues](https://img.shields.io/github/issues/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/issues)
-[![Last Commit](https://img.shields.io/github/last-commit/rmc8/PyObsidianMCP?style=flat)](https://github.com/rmc8/PyObsidianMCP/commits)
+[![GitHub stars](https://img.shields.io/github/stars/rmc8/py-obsidian-tools?style=flat)](https://github.com/rmc8/py-obsidian-tools/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/rmc8/py-obsidian-tools?style=flat)](https://github.com/rmc8/py-obsidian-tools/issues)
+[![Last Commit](https://img.shields.io/github/last-commit/rmc8/py-obsidian-tools?style=flat)](https://github.com/rmc8/py-obsidian-tools/commits)
 
-# PyObsidianMCP
+# py-obsidian-tools
 
 通过 Local REST API 社区插件与 Obsidian 交互的 MCP 服务器。
 
@@ -169,7 +169,7 @@ Windows：`%APPDATA%/Claude/claude_desktop_config.json`
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/rmc8/PyObsidianMCP",
+        "git+https://github.com/rmc8/py-obsidian-tools",
         "py-obsidian-tools"
       ],
       "env": {

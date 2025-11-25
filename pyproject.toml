@@ -1,6 +1,6 @@
 [project]
 name = "py-obsidian-tools"
-version = "0.1.4"
+version = "0.1.5"
 description = "MCP server for Obsidian via Local REST API"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -27,7 +27,6 @@ dependencies = [
 
 [project.scripts]
 py-obsidian-tools = "src.main:main"
-pyobsidianmcp = "src.main:main"       # backwards compatibility
 pyobsidian-index = "src.indexer:main"
 
 [project.optional-dependencies]
@@ -56,10 +55,10 @@ vector-all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rmc8/PyObsidianMCP"
-Repository = "https://github.com/rmc8/PyObsidianMCP"
-Issues = "https://github.com/rmc8/PyObsidianMCP/issues"
-Documentation = "https://github.com/rmc8/PyObsidianMCP#readme"
+Homepage = "https://github.com/rmc8/py-obsidian-tools"
+Repository = "https://github.com/rmc8/py-obsidian-tools"
+Issues = "https://github.com/rmc8/py-obsidian-tools/issues"
+Documentation = "https://github.com/rmc8/py-obsidian-tools#readme"
 
 [dependency-groups]
 dev = ["isort>=7.0.0", "ruff>=0.14.6"]

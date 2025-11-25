@@ -973,7 +973,7 @@ def _get_vector_store():
     except ImportError:
         raise VectorConfigError(
             "Vector search dependencies not installed. "
-            "Install with: pip install 'pyobsidianmcp[vector]'"
+            "Install with: pip install 'py-obsidian-tools[vector]'"
         )
 
 

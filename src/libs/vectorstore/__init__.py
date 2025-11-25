@@ -1,4 +1,4 @@
-"""Vector search functionality for PyObsidianMCP using ChromaDB."""
+"""Vector search functionality for py-obsidian-tools using ChromaDB."""
 
 from .chunker import MarkdownChunker
 from .embeddings import (BaseEmbeddingProvider, CohereEmbeddingProvider,

@@ -111,7 +111,7 @@ class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
             from openai import OpenAI
         except ImportError:
             raise EmbeddingProviderError(
-                "openai package not installed. Install with: pip install 'pyobsidianmcp[vector-openai]'"
+                "openai package not installed. Install with: pip install 'py-obsidian-tools[vector-openai]'"
             )
 
         try:
@@ -145,7 +145,7 @@ class GoogleEmbeddingProvider(BaseEmbeddingProvider):
             import google.generativeai as genai
         except ImportError:
             raise EmbeddingProviderError(
-                "google-generativeai package not installed. Install with: pip install 'pyobsidianmcp[vector-google]'"
+                "google-generativeai package not installed. Install with: pip install 'py-obsidian-tools[vector-google]'"
             )
 
         try:
@@ -186,7 +186,7 @@ class CohereEmbeddingProvider(BaseEmbeddingProvider):
             import cohere
         except ImportError:
             raise EmbeddingProviderError(
-                "cohere package not installed. Install with: pip install 'pyobsidianmcp[vector-cohere]'"
+                "cohere package not installed. Install with: pip install 'py-obsidian-tools[vector-cohere]'"
             )
 
         try:
