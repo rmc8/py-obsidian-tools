@@ -69,7 +69,7 @@ MCP-сервер для взаимодействия с Obsidian через пл
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -116,7 +116,7 @@ OBSIDIAN_PORT=27123
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -137,9 +137,9 @@ OBSIDIAN_PORT=27123
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/pyobsidianmcp",
+        "/path/to/py-obsidian-tools",
         "run",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -161,7 +161,7 @@ OBSIDIAN_PORT=27123
       "args": [
         "--from",
         "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -180,13 +180,13 @@ OBSIDIAN_PORT=27123
 
 ```bash
 # Базовая (локальные эмбеддинги - API-ключ не требуется)
-pip install "pyobsidianmcp[vector]"
+pip install "py-obsidian-tools[vector]"
 
 # С внешними провайдерами эмбеддингов
-pip install "pyobsidianmcp[vector-openai]"
-pip install "pyobsidianmcp[vector-google]"
-pip install "pyobsidianmcp[vector-cohere]"
-pip install "pyobsidianmcp[vector-all]"
+pip install "py-obsidian-tools[vector-openai]"
+pip install "py-obsidian-tools[vector-google]"
+pip install "py-obsidian-tools[vector-cohere]"
+pip install "py-obsidian-tools[vector-all]"
 ```
 
 ### Создание индекса
@@ -198,7 +198,7 @@ pip install "pyobsidianmcp[vector-all]"
 pyobsidian-index full --verbose
 
 # Метод 2: Используя uvx (установка не требуется)
-uvx --from pyobsidianmcp pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 ```
 
 ### CLI-команды
@@ -262,7 +262,7 @@ uv sync
 Вы можете запустить MCP Inspector через `npx` с помощью этой команды:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /path/to/pyobsidianmcp run pyobsidianmcp
+npx @modelcontextprotocol/inspector uv --directory /path/to/py-obsidian-tools run py-obsidian-tools
 ```
 
 После запуска Inspector отобразит URL, который вы можете открыть в браузере для начала отладки.

@@ -69,7 +69,7 @@ Obsidian REST API कुंजी के साथ एनवायरनमे�
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -116,7 +116,7 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -137,9 +137,9 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/pyobsidianmcp",
+        "/path/to/py-obsidian-tools",
         "run",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -161,7 +161,7 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
       "args": [
         "--from",
         "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -180,13 +180,13 @@ ChromaDB का उपयोग करके सेमांटिक सर्�
 
 ```bash
 # बेसिक (लोकल एम्बेडिंग्स - API कुंजी आवश्यक नहीं)
-pip install "pyobsidianmcp[vector]"
+pip install "py-obsidian-tools[vector]"
 
 # बाहरी एम्बेडिंग प्रोवाइडर्स के साथ
-pip install "pyobsidianmcp[vector-openai]"
-pip install "pyobsidianmcp[vector-google]"
-pip install "pyobsidianmcp[vector-cohere]"
-pip install "pyobsidianmcp[vector-all]"
+pip install "py-obsidian-tools[vector-openai]"
+pip install "py-obsidian-tools[vector-google]"
+pip install "py-obsidian-tools[vector-cohere]"
+pip install "py-obsidian-tools[vector-all]"
 ```
 
 ### इंडेक्स बनाएं
@@ -198,7 +198,7 @@ pip install "pyobsidianmcp[vector-all]"
 pyobsidian-index full --verbose
 
 # विधि 2: uvx का उपयोग (इंस्टॉलेशन आवश्यक नहीं)
-uvx --from pyobsidianmcp pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 ```
 
 ### CLI कमांड्स
@@ -262,7 +262,7 @@ uv sync
 आप इस कमांड के साथ `npx` के माध्यम से MCP Inspector लॉन्च कर सकते हैं:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /path/to/pyobsidianmcp run pyobsidianmcp
+npx @modelcontextprotocol/inspector uv --directory /path/to/py-obsidian-tools run py-obsidian-tools
 ```
 
 लॉन्च होने पर, Inspector एक URL प्रदर्शित करेगा जिसे आप डिबगिंग शुरू करने के लिए अपने ब्राउज़र में एक्सेस कर सकते हैं।

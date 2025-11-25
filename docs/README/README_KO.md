@@ -69,7 +69,7 @@ Obsidian REST API 키로 환경을 설정하는 두 가지 방법이 있습니�
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -116,7 +116,7 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -137,9 +137,9 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/pyobsidianmcp",
+        "/path/to/py-obsidian-tools",
         "run",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -161,7 +161,7 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "args": [
         "--from",
         "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -180,13 +180,13 @@ ChromaDB를 사용한 의미 검색 기능입니다. 이 기능을 사용하면 
 
 ```bash
 # 기본 (로컬 임베딩 - API 키 불필요)
-pip install "pyobsidianmcp[vector]"
+pip install "py-obsidian-tools[vector]"
 
 # 외부 임베딩 제공자 사용
-pip install "pyobsidianmcp[vector-openai]"
-pip install "pyobsidianmcp[vector-google]"
-pip install "pyobsidianmcp[vector-cohere]"
-pip install "pyobsidianmcp[vector-all]"
+pip install "py-obsidian-tools[vector-openai]"
+pip install "py-obsidian-tools[vector-google]"
+pip install "py-obsidian-tools[vector-cohere]"
+pip install "py-obsidian-tools[vector-all]"
 ```
 
 ### 인덱스 생성
@@ -198,7 +198,7 @@ pip install "pyobsidianmcp[vector-all]"
 pyobsidian-index full --verbose
 
 # uvx 사용 (설치 불필요)
-uvx --from pyobsidianmcp pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 ```
 
 ### CLI 명령
@@ -262,7 +262,7 @@ MCP 서버는 stdio를 통해 실행되므로 디버깅이 어려울 수 있습�
 다음 명령으로 `npx`를 통해 MCP Inspector를 시작할 수 있습니다:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /path/to/pyobsidianmcp run pyobsidianmcp
+npx @modelcontextprotocol/inspector uv --directory /path/to/py-obsidian-tools run py-obsidian-tools
 ```
 
 시작 후 Inspector가 브라우저에서 접속하여 디버깅을 시작할 수 있는 URL을 표시합니다.

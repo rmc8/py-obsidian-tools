@@ -69,7 +69,7 @@ Es gibt zwei Möglichkeiten, die Umgebung mit dem Obsidian REST API-Schlüssel z
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -116,7 +116,7 @@ Auf Windows: `%APPDATA%/Claude/claude_desktop_config.json`
   "mcpServers": {
     "obsidian": {
       "command": "uvx",
-      "args": ["pyobsidianmcp"],
+      "args": ["py-obsidian-tools"],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>",
         "OBSIDIAN_HOST": "127.0.0.1",
@@ -137,9 +137,9 @@ Auf Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "command": "uv",
       "args": [
         "--directory",
-        "/path/to/pyobsidianmcp",
+        "/path/to/py-obsidian-tools",
         "run",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -161,7 +161,7 @@ Auf Windows: `%APPDATA%/Claude/claude_desktop_config.json`
       "args": [
         "--from",
         "git+https://github.com/rmc8/PyObsidianMCP",
-        "pyobsidianmcp"
+        "py-obsidian-tools"
       ],
       "env": {
         "OBSIDIAN_API_KEY": "<your_api_key_here>"
@@ -180,13 +180,13 @@ Semantische Suchfunktionalität mit ChromaDB. Diese Funktion ermöglicht natürl
 
 ```bash
 # Basis (lokale Embeddings - kein API-Schlüssel erforderlich)
-pip install "pyobsidianmcp[vector]"
+pip install "py-obsidian-tools[vector]"
 
 # Mit externen Embedding-Anbietern
-pip install "pyobsidianmcp[vector-openai]"
-pip install "pyobsidianmcp[vector-google]"
-pip install "pyobsidianmcp[vector-cohere]"
-pip install "pyobsidianmcp[vector-all]"
+pip install "py-obsidian-tools[vector-openai]"
+pip install "py-obsidian-tools[vector-google]"
+pip install "py-obsidian-tools[vector-cohere]"
+pip install "py-obsidian-tools[vector-all]"
 ```
 
 ### Index erstellen
@@ -198,7 +198,7 @@ Bevor Sie die Vektorsuche verwenden, müssen Sie einen Index Ihres Vaults erstel
 pyobsidian-index full --verbose
 
 # Methode 2: Mit uvx (keine Installation erforderlich)
-uvx --from pyobsidianmcp pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 ```
 
 ### CLI-Befehle
@@ -262,7 +262,7 @@ Da MCP-Server über stdio laufen, kann das Debugging eine Herausforderung sein. 
 Sie können den MCP Inspector über `npx` mit diesem Befehl starten:
 
 ```bash
-npx @modelcontextprotocol/inspector uv --directory /path/to/pyobsidianmcp run pyobsidianmcp
+npx @modelcontextprotocol/inspector uv --directory /path/to/py-obsidian-tools run py-obsidian-tools
 ```
 
 Nach dem Start zeigt der Inspector eine URL an, die Sie in Ihrem Browser aufrufen können, um mit dem Debugging zu beginnen.

@@ -1,18 +1,28 @@
 [project]
-name = "py-obsidian-mcp"
+name = "py-obsidian-tools"
 version = "0.1.1"
 description = "MCP server for Obsidian via Local REST API"
 readme = "README.md"
 requires-python = ">=3.13"
-license = "MIT"
+license = {file = "LICENSE"}
 authors = [{ name = "rmc8" }]
-keywords = ["mcp", "obsidian", "ai", "llm", "claude"]
+maintainers = [{ name = "rmc8" }]
+keywords = ["mcp", "obsidian", "ai", "llm", "claude", "model-context-protocol"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Communications",
+]
 dependencies = [
-    "httpx>=0.28.1",
-    "mcp>=1.22.0",
-    "pydantic>=2.12.4",
-    "pydantic-settings>=2.0.0",
-    "python-dotenv>=1.2.1",
+    "httpx>=0.28.0",
+    "mcp>=1.14.0",
+    "pydantic>=2.11.0",
+    "pydantic-settings>=2.10.0",
+    "python-dotenv>=1.0.0",
 ]
 
 [project.scripts]
@@ -45,8 +55,10 @@ vector-all = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rmc8/pyobsidianmcp"
-Repository = "https://github.com/rmc8/pyobsidianmcp"
+Homepage = "https://github.com/rmc8/PyObsidianMCP"
+Repository = "https://github.com/rmc8/PyObsidianMCP"
+Issues = "https://github.com/rmc8/PyObsidianMCP/issues"
+Documentation = "https://github.com/rmc8/PyObsidianMCP#readme"
 
 [dependency-groups]
 dev = ["isort>=7.0.0", "ruff>=0.14.6"]

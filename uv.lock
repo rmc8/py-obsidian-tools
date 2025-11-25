@@ -1323,6 +1323,84 @@ wheels = [
 ]
 
 [[package]]
+name = "py-obsidian-tools"
+version = "0.1.1"
+source = { editable = "." }
+dependencies = [
+    { name = "httpx" },
+    { name = "mcp" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "python-dotenv" },
+]
+
+[package.optional-dependencies]
+vector = [
+    { name = "chromadb" },
+    { name = "semantic-text-splitter" },
+]
+vector-all = [
+    { name = "chromadb" },
+    { name = "cohere" },
+    { name = "google-generativeai" },
+    { name = "openai" },
+    { name = "semantic-text-splitter" },
+]
+vector-cohere = [
+    { name = "chromadb" },
+    { name = "cohere" },
+    { name = "semantic-text-splitter" },
+]
+vector-google = [
+    { name = "chromadb" },
+    { name = "google-generativeai" },
+    { name = "semantic-text-splitter" },
+]
+vector-openai = [
+    { name = "chromadb" },
+    { name = "openai" },
+    { name = "semantic-text-splitter" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "isort" },
+    { name = "ruff" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "chromadb", marker = "extra == 'vector'", specifier = ">=0.4.0" },
+    { name = "chromadb", marker = "extra == 'vector-all'", specifier = ">=0.4.0" },
+    { name = "chromadb", marker = "extra == 'vector-cohere'", specifier = ">=0.4.0" },
+    { name = "chromadb", marker = "extra == 'vector-google'", specifier = ">=0.4.0" },
+    { name = "chromadb", marker = "extra == 'vector-openai'", specifier = ">=0.4.0" },
+    { name = "cohere", marker = "extra == 'vector-all'", specifier = ">=5.0.0" },
+    { name = "cohere", marker = "extra == 'vector-cohere'", specifier = ">=5.0.0" },
+    { name = "google-generativeai", marker = "extra == 'vector-all'", specifier = ">=0.3.0" },
+    { name = "google-generativeai", marker = "extra == 'vector-google'", specifier = ">=0.3.0" },
+    { name = "httpx", specifier = ">=0.28.0" },
+    { name = "mcp", specifier = ">=1.14.0" },
+    { name = "openai", marker = "extra == 'vector-all'", specifier = ">=1.0.0" },
+    { name = "openai", marker = "extra == 'vector-openai'", specifier = ">=1.0.0" },
+    { name = "pydantic", specifier = ">=2.11.0" },
+    { name = "pydantic-settings", specifier = ">=2.10.0" },
+    { name = "python-dotenv", specifier = ">=1.0.0" },
+    { name = "semantic-text-splitter", marker = "extra == 'vector'", specifier = ">=0.18.0" },
+    { name = "semantic-text-splitter", marker = "extra == 'vector-all'", specifier = ">=0.18.0" },
+    { name = "semantic-text-splitter", marker = "extra == 'vector-cohere'", specifier = ">=0.18.0" },
+    { name = "semantic-text-splitter", marker = "extra == 'vector-google'", specifier = ">=0.18.0" },
+    { name = "semantic-text-splitter", marker = "extra == 'vector-openai'", specifier = ">=0.18.0" },
+]
+provides-extras = ["vector", "vector-openai", "vector-google", "vector-cohere", "vector-all"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "isort", specifier = ">=7.0.0" },
+    { name = "ruff", specifier = ">=0.14.6" },
+]
+
+[[package]]
 name = "pyasn1"
 version = "0.6.1"
 source = { registry = "https://pypi.org/simple" }
@@ -1547,84 +1625,6 @@ wheels = [
 [package.optional-dependencies]
 crypto = [
     { name = "cryptography" },
-]
-
-[[package]]
-name = "pyobsidianmcp"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "httpx" },
-    { name = "mcp" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "python-dotenv" },
-]
-
-[package.optional-dependencies]
-vector = [
-    { name = "chromadb" },
-    { name = "semantic-text-splitter" },
-]
-vector-all = [
-    { name = "chromadb" },
-    { name = "cohere" },
-    { name = "google-generativeai" },
-    { name = "openai" },
-    { name = "semantic-text-splitter" },
-]
-vector-cohere = [
-    { name = "chromadb" },
-    { name = "cohere" },
-    { name = "semantic-text-splitter" },
-]
-vector-google = [
-    { name = "chromadb" },
-    { name = "google-generativeai" },
-    { name = "semantic-text-splitter" },
-]
-vector-openai = [
-    { name = "chromadb" },
-    { name = "openai" },
-    { name = "semantic-text-splitter" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "isort" },
-    { name = "ruff" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "chromadb", marker = "extra == 'vector'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-all'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-cohere'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-google'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-openai'", specifier = ">=0.4.0" },
-    { name = "cohere", marker = "extra == 'vector-all'", specifier = ">=5.0.0" },
-    { name = "cohere", marker = "extra == 'vector-cohere'", specifier = ">=5.0.0" },
-    { name = "google-generativeai", marker = "extra == 'vector-all'", specifier = ">=0.3.0" },
-    { name = "google-generativeai", marker = "extra == 'vector-google'", specifier = ">=0.3.0" },
-    { name = "httpx", specifier = ">=0.28.1" },
-    { name = "mcp", specifier = ">=1.22.0" },
-    { name = "openai", marker = "extra == 'vector-all'", specifier = ">=1.0.0" },
-    { name = "openai", marker = "extra == 'vector-openai'", specifier = ">=1.0.0" },
-    { name = "pydantic", specifier = ">=2.12.4" },
-    { name = "pydantic-settings", specifier = ">=2.0.0" },
-    { name = "python-dotenv", specifier = ">=1.2.1" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-all'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-cohere'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-google'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-openai'", specifier = ">=0.18.0" },
-]
-provides-extras = ["vector", "vector-openai", "vector-google", "vector-cohere", "vector-all"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "isort", specifier = ">=7.0.0" },
-    { name = "ruff", specifier = ">=0.14.6" },
 ]
 
 [[package]]
