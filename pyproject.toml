@@ -26,7 +26,8 @@ dependencies = [
 ]
 
 [project.scripts]
-pyobsidianmcp = "src.main:main"
+py-obsidian-tools = "src.main:main"
+pyobsidianmcp = "src.main:main"  # backwards compatibility
 pyobsidian-index = "src.indexer:main"
 
 [project.optional-dependencies]
