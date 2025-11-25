@@ -1,10 +1,10 @@
 [project]
 name = "py-obsidian-tools"
-version = "0.1.1"
+version = "0.1.2"
 description = "MCP server for Obsidian via Local REST API"
 readme = "README.md"
 requires-python = ">=3.13"
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 authors = [{ name = "rmc8" }]
 maintainers = [{ name = "rmc8" }]
 keywords = ["mcp", "obsidian", "ai", "llm", "claude", "model-context-protocol"]
