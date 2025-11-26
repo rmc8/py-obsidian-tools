@@ -181,6 +181,15 @@ Windows：`%APPDATA%/Claude/claude_desktop_config.json`
 
 ### 安裝
 
+**使用 uvx（建議）**：
+
+```bash
+# 無需安裝 - 使用 uvx 直接執行
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**使用 pip**：
+
 ```bash
 # 基礎（本地嵌入 - 無需 API 金鑰）
 pip install "py-obsidian-tools[vector]"
@@ -197,21 +206,31 @@ pip install "py-obsidian-tools[vector-all]"
 在使用向量搜尋之前，您需要建立保險庫的索引：
 
 ```bash
-# 方法 1：已安裝的情況下
-pyobsidian-index full --verbose
+# 使用 uvx（建議 - 無需安裝）
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# 方法 2：使用 uvx（無需安裝）
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# 如果已透過 pip 安裝
+pyobsidian-index full --verbose
 ```
+
+> **注意**：`pyobsidian-index` 指令需要 `[vector]` extras。使用 uvx 時，必須在套件規範中包含 `[vector]`。不帶 `[vector]` 執行 `uvx --from py-obsidian-tools pyobsidian-index` 將會失敗。
 
 ### CLI 指令
 
+```bash
+# 使用 uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <指令>
+
+# 使用 pip 安裝
+pyobsidian-index <指令>
+```
+
 | 指令 | 說明 |
 |------|------|
-| `pyobsidian-index full` | 索引保險庫中的所有筆記 |
-| `pyobsidian-index update` | 增量更新（僅新建/修改的筆記） |
-| `pyobsidian-index clear` | 清除整個索引 |
-| `pyobsidian-index status` | 顯示索引狀態 |
+| `full` | 索引保險庫中的所有筆記 |
+| `update` | 增量更新（僅新建/修改的筆記） |
+| `clear` | 清除整個索引 |
+| `status` | 顯示索引狀態 |
 
 ### 環境變數
 

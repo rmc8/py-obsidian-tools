@@ -185,6 +185,15 @@ Funcionalidade de pesquisa semântica usando ChromaDB. Este recurso permite cons
 
 ### Instalação
 
+**Usando uvx (recomendado)**:
+
+```bash
+# Sem instalação necessária - executar diretamente com uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**Usando pip**:
+
 ```bash
 # Básico (embeddings locais - não requer chave API)
 pip install "py-obsidian-tools[vector]"
@@ -201,21 +210,31 @@ pip install "py-obsidian-tools[vector-all]"
 Antes de usar a pesquisa vetorial, você precisa criar um índice do seu vault:
 
 ```bash
-# Método 1: Se já instalado
-pyobsidian-index full --verbose
+# Usando uvx (recomendado - sem instalação necessária)
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# Método 2: Usando uvx (sem instalação necessária)
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# Ou se instalado via pip
+pyobsidian-index full --verbose
 ```
+
+> **Nota**: O comando `pyobsidian-index` requer os extras `[vector]`. Ao usar uvx, você deve incluir `[vector]` na especificação do pacote. Executar `uvx --from py-obsidian-tools pyobsidian-index` sem `[vector]` falhará.
 
 ### Comandos CLI
 
+```bash
+# Usando uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <comando>
+
+# Usando instalação pip
+pyobsidian-index <comando>
+```
+
 | Comando | Descrição |
 |---------|-----------|
-| `pyobsidian-index full` | Indexar todas as notas do vault |
-| `pyobsidian-index update` | Atualização incremental (apenas notas novas/modificadas) |
-| `pyobsidian-index clear` | Limpar todo o índice |
-| `pyobsidian-index status` | Mostrar status do índice |
+| `full` | Indexar todas as notas do vault |
+| `update` | Atualização incremental (apenas notas novas/modificadas) |
+| `clear` | Limpar todo o índice |
+| `status` | Mostrar status do índice |
 
 ### Variáveis de Ambiente
 

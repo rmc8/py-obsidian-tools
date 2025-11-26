@@ -185,6 +185,15 @@ Semantic search functionality using ChromaDB. This feature allows natural langua
 
 ### Installation
 
+**Using uvx (recommended)**:
+
+```bash
+# No installation required - run directly with uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**Using pip**:
+
 ```bash
 # Basic (local embeddings - no API key required)
 pip install "py-obsidian-tools[vector]"
@@ -201,21 +210,31 @@ pip install "py-obsidian-tools[vector-all]"
 Before using vector search, you need to create an index of your vault:
 
 ```bash
-# Method 1: If already installed
-pyobsidian-index full --verbose
+# Using uvx (recommended - no installation required)
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# Method 2: Using uvx (no installation required)
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# Or if installed via pip
+pyobsidian-index full --verbose
 ```
+
+> **Note**: The `pyobsidian-index` command requires the `[vector]` extras. When using uvx, you must include `[vector]` in the package specification. Running `uvx --from py-obsidian-tools pyobsidian-index` without `[vector]` will fail.
 
 ### CLI Commands
 
+```bash
+# Using uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <command>
+
+# Using pip installation
+pyobsidian-index <command>
+```
+
 | Command | Description |
 |---------|-------------|
-| `pyobsidian-index full` | Index all notes in the vault |
-| `pyobsidian-index update` | Incremental update (new/modified notes only) |
-| `pyobsidian-index clear` | Clear the entire index |
-| `pyobsidian-index status` | Show index status |
+| `full` | Index all notes in the vault |
+| `update` | Incremental update (new/modified notes only) |
+| `clear` | Clear the entire index |
+| `status` | Show index status |
 
 ### Environment Variables
 

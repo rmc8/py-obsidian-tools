@@ -6,9 +6,14 @@ from urllib.parse import quote
 import httpx
 
 from .config import ObsidianConfig
-from .exceptions import (ObsidianAPIError, ObsidianAuthError,
-                         ObsidianConnectionError, ObsidianNotFoundError,
-                         ObsidianRateLimitError, ObsidianTimeoutError)
+from .exceptions import (
+    ObsidianAPIError,
+    ObsidianAuthError,
+    ObsidianConnectionError,
+    ObsidianNotFoundError,
+    ObsidianRateLimitError,
+    ObsidianTimeoutError,
+)
 from .models import CommandInfo, NoteContent, SearchMatch, SearchResult
 
 
@@ -127,16 +132,37 @@ class ObsidianClient:
 
     # ========== Vault Operations ==========
 
-    async def list_files(self, directory: str = "") -> list[str]:
-        """List files in the vault or a specific directory."""
+    async def list_files(
+        self, directory: str = "", recursive: bool = False
+    ) -> list[str]:
+        """List files in the vault or a specific directory.
+
+        Args:
+            directory: Directory path to list (empty for root).
+            recursive: If True, recursively list all files in subdirectories.
+
+        Returns:
+            List of file paths relative to vault root.
+        """
         endpoint = f"/vault/{directory}" if directory else "/vault/"
         if directory and not endpoint.endswith("/"):
             endpoint += "/"
 
         response = await self._request("GET", endpoint)
+        files: list[str] = []
+
         if isinstance(response, dict) and "files" in response:
-            return response["files"]
-        return []
+            for item in response["files"]:
+                if item.endswith("/"):  # Directory
+                    if recursive:
+                        subdir = f"{directory}/{item[:-1]}" if directory else item[:-1]
+                        subfiles = await self.list_files(subdir, recursive=True)
+                        files.extend(subfiles)
+                else:  # File
+                    full_path = f"{directory}/{item}" if directory else item
+                    files.append(full_path)
+
+        return files
 
     async def get_note(self, path: str) -> NoteContent:
         """Get note content with frontmatter and metadata."""

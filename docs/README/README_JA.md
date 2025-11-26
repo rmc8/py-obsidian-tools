@@ -185,6 +185,15 @@ ChromaDBを使用したセマンティック検索機能です。この機能に
 
 ### インストール
 
+**uvxを使用（推奨）**：
+
+```bash
+# インストール不要 - uvxで直接実行
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**pipを使用**：
+
 ```bash
 # 基本（ローカル埋め込み - APIキー不要）
 pip install "py-obsidian-tools[vector]"
@@ -201,21 +210,31 @@ pip install "py-obsidian-tools[vector-all]"
 ベクトル検索を使用する前に、Vaultのインデックスを作成する必要があります：
 
 ```bash
-# 方法1：インストール済みの場合
-pyobsidian-index full --verbose
+# uvxを使用（推奨 - インストール不要）
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# 方法2：uvxを使用（インストール不要）
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# pipでインストール済みの場合
+pyobsidian-index full --verbose
 ```
+
+> **注意**: `pyobsidian-index`コマンドには`[vector]`エクストラが必要です。uvxを使用する場合、パッケージ指定に`[vector]`を含める必要があります。`[vector]`なしで`uvx --from py-obsidian-tools pyobsidian-index`を実行すると失敗します。
 
 ### CLIコマンド
 
+```bash
+# uvxを使用
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <コマンド>
+
+# pipインストールを使用
+pyobsidian-index <コマンド>
+```
+
 | コマンド | 説明 |
 |---------|------|
-| `pyobsidian-index full` | Vault内のすべてのノートをインデックス |
-| `pyobsidian-index update` | 差分更新（新規/変更されたノートのみ） |
-| `pyobsidian-index clear` | インデックス全体をクリア |
-| `pyobsidian-index status` | インデックスの状態を表示 |
+| `full` | Vault内のすべてのノートをインデックス |
+| `update` | 差分更新（新規/変更されたノートのみ） |
+| `clear` | インデックス全体をクリア |
+| `status` | インデックスの状態を表示 |
 
 ### 環境変数
 

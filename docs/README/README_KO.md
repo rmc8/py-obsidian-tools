@@ -185,6 +185,15 @@ ChromaDB를 사용한 의미 검색 기능입니다. 이 기능을 사용하면 
 
 ### 설치
 
+**uvx 사용 (권장)**:
+
+```bash
+# 설치 불필요 - uvx로 직접 실행
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**pip 사용**:
+
 ```bash
 # 기본 (로컬 임베딩 - API 키 불필요)
 pip install "py-obsidian-tools[vector]"
@@ -201,21 +210,31 @@ pip install "py-obsidian-tools[vector-all]"
 벡터 검색을 사용하기 전에 볼트의 인덱스를 생성해야 합니다:
 
 ```bash
-# 설치되어 있는 경우
-pyobsidian-index full --verbose
+# uvx 사용 (권장 - 설치 불필요)
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# uvx 사용 (설치 불필요)
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# pip로 설치된 경우
+pyobsidian-index full --verbose
 ```
+
+> **참고**: `pyobsidian-index` 명령에는 `[vector]` extras가 필요합니다. uvx를 사용할 때 패키지 사양에 `[vector]`를 포함해야 합니다. `[vector]` 없이 `uvx --from py-obsidian-tools pyobsidian-index`를 실행하면 실패합니다.
 
 ### CLI 명령
 
+```bash
+# uvx 사용
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <명령>
+
+# pip 설치 사용
+pyobsidian-index <명령>
+```
+
 | 명령 | 설명 |
 |------|------|
-| `pyobsidian-index full` | 볼트의 모든 노트 인덱싱 |
-| `pyobsidian-index update` | 증분 업데이트 (신규/수정된 노트만) |
-| `pyobsidian-index clear` | 전체 인덱스 삭제 |
-| `pyobsidian-index status` | 인덱스 상태 표시 |
+| `full` | 볼트의 모든 노트 인덱싱 |
+| `update` | 증분 업데이트 (신규/수정된 노트만) |
+| `clear` | 전체 인덱스 삭제 |
+| `status` | 인덱스 상태 표시 |
 
 ### 환경 변수
 

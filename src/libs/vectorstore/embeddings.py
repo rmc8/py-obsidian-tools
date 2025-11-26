@@ -5,17 +5,44 @@ from abc import ABC, abstractmethod
 from chromadb import Documents, EmbeddingFunction, Embeddings
 
 from ..config import VectorConfig
-from ..exceptions import (EmbeddingAPIError, EmbeddingConnectionError,
-                          EmbeddingProviderError, EmbeddingTimeoutError)
+from ..exceptions import (
+    EmbeddingAPIError,
+    EmbeddingConnectionError,
+    EmbeddingProviderError,
+    EmbeddingTimeoutError,
+)
 
 
 class BaseEmbeddingProvider(EmbeddingFunction, ABC):
     """Base class for embedding providers."""
 
     @abstractmethod
-    def __call__(self, input: Documents) -> Embeddings:
-        """Convert texts to embedding vectors."""
+    def embed_documents(self, documents: list[str]) -> list[list[float]]:
+        """Convert texts to embedding vectors.
+
+        Args:
+            documents: List of texts to embed.
+
+        Returns:
+            List of embedding vectors.
+        """
         pass
+
+    def embed_query(self, query: str) -> list[float]:
+        """Convert a single query to embedding vector.
+
+        Args:
+            query: Query text to embed.
+
+        Returns:
+            Embedding vector.
+        """
+        result = self.embed_documents([query])
+        return result[0] if result else []
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """ChromaDB compatibility - delegates to embed_documents."""
+        return self.embed_documents(list(input))
 
     @property
     @abstractmethod
@@ -38,11 +65,11 @@ class DefaultEmbeddingProvider(BaseEmbeddingProvider):
 
         self._ef = DefaultEmbeddingFunction()
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def embed_documents(self, documents: list[str]) -> list[list[float]]:
         """Convert texts to embedding vectors."""
-        if not input:
+        if not documents:
             return []
-        return self._ef(input)
+        return self._ef(documents)
 
     @property
     def dimension(self) -> int:
@@ -63,9 +90,9 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
         self._model = model
         self._dimension: int | None = None
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def embed_documents(self, documents: list[str]) -> list[list[float]]:
         """Convert texts to embedding vectors."""
-        if not input:
+        if not documents:
             return []
 
         import httpx
@@ -73,7 +100,7 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
         embeddings: list[list[float]] = []
         try:
             with httpx.Client(timeout=60.0) as client:
-                for text in input:
+                for text in documents:
                     response = client.post(
                         f"{self._host}/api/embeddings",
                         json={"model": self._model, "prompt": text},
@@ -119,9 +146,9 @@ class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
             "text-embedding-ada-002": 1536,
         }
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def embed_documents(self, documents: list[str]) -> list[list[float]]:
         """Convert texts to embedding vectors."""
-        if not input:
+        if not documents:
             return []
 
         try:
@@ -133,7 +160,7 @@ class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
 
         try:
             client = OpenAI(api_key=self._api_key)
-            response = client.embeddings.create(input=list(input), model=self._model)
+            response = client.embeddings.create(input=documents, model=self._model)
             return [item.embedding for item in response.data]
         except ImportError:
             raise
@@ -158,9 +185,9 @@ class GoogleEmbeddingProvider(BaseEmbeddingProvider):
         self._api_key = api_key
         self._model = model
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def embed_documents(self, documents: list[str]) -> list[list[float]]:
         """Convert texts to embedding vectors."""
-        if not input:
+        if not documents:
             return []
 
         try:
@@ -173,7 +200,7 @@ class GoogleEmbeddingProvider(BaseEmbeddingProvider):
         try:
             genai.configure(api_key=self._api_key)
             embeddings: list[list[float]] = []
-            for text in input:
+            for text in documents:
                 result = genai.embed_content(
                     model=f"models/{self._model}",
                     content=text,
@@ -204,9 +231,9 @@ class CohereEmbeddingProvider(BaseEmbeddingProvider):
         self._api_key = api_key
         self._model = model
 
-    def __call__(self, input: Documents) -> Embeddings:
+    def embed_documents(self, documents: list[str]) -> list[list[float]]:
         """Convert texts to embedding vectors."""
-        if not input:
+        if not documents:
             return []
 
         try:
@@ -219,7 +246,7 @@ class CohereEmbeddingProvider(BaseEmbeddingProvider):
         try:
             client = cohere.Client(self._api_key)
             response = client.embed(
-                texts=list(input),
+                texts=documents,
                 model=self._model,
                 input_type="search_document",
             )

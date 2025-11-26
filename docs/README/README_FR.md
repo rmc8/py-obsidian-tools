@@ -181,6 +181,15 @@ Fonctionnalité de recherche sémantique utilisant ChromaDB. Cette fonctionnalit
 
 ### Installation
 
+**Utiliser uvx (recommandé)** :
+
+```bash
+# Aucune installation requise - exécuter directement avec uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**Utiliser pip** :
+
 ```bash
 # Basique (embeddings locaux - pas de clé API requise)
 pip install "py-obsidian-tools[vector]"
@@ -197,21 +206,31 @@ pip install "py-obsidian-tools[vector-all]"
 Avant d'utiliser la recherche vectorielle, vous devez créer un index de votre coffre :
 
 ```bash
-# Méthode 1 : Si déjà installé
-pyobsidian-index full --verbose
+# Utiliser uvx (recommandé - aucune installation requise)
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# Méthode 2 : Utiliser uvx (aucune installation requise)
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# Ou si installé via pip
+pyobsidian-index full --verbose
 ```
+
+> **Note** : La commande `pyobsidian-index` nécessite les extras `[vector]`. Lors de l'utilisation d'uvx, vous devez inclure `[vector]` dans la spécification du paquet. Exécuter `uvx --from py-obsidian-tools pyobsidian-index` sans `[vector]` échouera.
 
 ### Commandes CLI
 
+```bash
+# Utiliser uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <commande>
+
+# Utiliser l'installation pip
+pyobsidian-index <commande>
+```
+
 | Commande | Description |
 |----------|-------------|
-| `pyobsidian-index full` | Indexer toutes les notes du coffre |
-| `pyobsidian-index update` | Mise à jour incrémentale (uniquement notes nouvelles/modifiées) |
-| `pyobsidian-index clear` | Effacer l'index entier |
-| `pyobsidian-index status` | Afficher l'état de l'index |
+| `full` | Indexer toutes les notes du coffre |
+| `update` | Mise à jour incrémentale (uniquement notes nouvelles/modifiées) |
+| `clear` | Effacer l'index entier |
+| `status` | Afficher l'état de l'index |
 
 ### Variables d'Environnement
 

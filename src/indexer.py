@@ -22,21 +22,29 @@ except ImportError:
 def _check_dependencies() -> None:
     """Check if required optional dependencies are installed."""
     if _MISSING_DEPS:
-        print("Error: Missing required dependencies for vector search.", file=sys.stderr)
+        print(
+            "Error: Missing required dependencies for vector search.", file=sys.stderr
+        )
         print(f"Missing packages: {', '.join(_MISSING_DEPS)}", file=sys.stderr)
         print(file=sys.stderr)
-        print("To use pyobsidian-index, install with vector extras:", file=sys.stderr)
-        print("  uvx --from 'py-obsidian-tools[vector]' pyobsidian-index", file=sys.stderr)
+        print("To use pyobsidian-index, include [vector] extras:", file=sys.stderr)
         print(file=sys.stderr)
-        print("Or install directly with pip:", file=sys.stderr)
+        print("  # Using uvx (recommended)", file=sys.stderr)
+        print(
+            "  uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <command>",
+            file=sys.stderr,
+        )
+        print(file=sys.stderr)
+        print("  # Using pip", file=sys.stderr)
         print("  pip install 'py-obsidian-tools[vector]'", file=sys.stderr)
+        print("  pyobsidian-index <command>", file=sys.stderr)
         sys.exit(1)
 
 
 from .libs.client import ObsidianClient  # noqa: E402
 from .libs.config import load_config, load_vector_config  # noqa: E402
-from .libs.exceptions import (  # noqa: E402
-    IndexNotFoundError,
+from .libs.exceptions import (
+    IndexNotFoundError,  # noqa: E402
     ObsidianAPIError,
     VectorConfigError,
     VectorStoreError,
@@ -63,8 +71,8 @@ async def fetch_all_notes(
     client: ObsidianClient,
     verbose: bool = False,
 ) -> list[dict]:
-    """Fetch all notes from Obsidian vault."""
-    files = await client.list_files()
+    """Fetch all notes from Obsidian vault (recursively)."""
+    files = await client.list_files(recursive=True)
     md_files = [f for f in files if f.endswith(".md")]
 
     notes: list[dict] = []
@@ -172,7 +180,7 @@ async def cmd_update(args: argparse.Namespace) -> int:
         # Fetch current notes metadata
         print("Fetching notes from Obsidian...")
         async with ObsidianClient(obsidian_config) as client:
-            files = await client.list_files()
+            files = await client.list_files(recursive=True)
             md_files = [f for f in files if f.endswith(".md")]
 
             current_notes: list[dict] = []

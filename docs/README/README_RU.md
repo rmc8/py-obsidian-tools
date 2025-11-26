@@ -185,6 +185,15 @@ OBSIDIAN_PORT=27124
 
 ### Установка
 
+**Используя uvx (рекомендуется)**:
+
+```bash
+# Установка не требуется - запуск напрямую через uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+```
+
+**Используя pip**:
+
 ```bash
 # Базовая (локальные эмбеддинги - API-ключ не требуется)
 pip install "py-obsidian-tools[vector]"
@@ -201,21 +210,31 @@ pip install "py-obsidian-tools[vector-all]"
 Перед использованием векторного поиска необходимо создать индекс вашего хранилища:
 
 ```bash
-# Метод 1: Если уже установлено
-pyobsidian-index full --verbose
+# Используя uvx (рекомендуется - установка не требуется)
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
-# Метод 2: Используя uvx (установка не требуется)
-uvx --from py-obsidian-tools pyobsidian-index full --verbose
+# Или если установлено через pip
+pyobsidian-index full --verbose
 ```
+
+> **Примечание**: Команда `pyobsidian-index` требует extras `[vector]`. При использовании uvx необходимо включить `[vector]` в спецификацию пакета. Выполнение `uvx --from py-obsidian-tools pyobsidian-index` без `[vector]` завершится ошибкой.
 
 ### CLI-команды
 
+```bash
+# Используя uvx
+uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <команда>
+
+# Используя установку pip
+pyobsidian-index <команда>
+```
+
 | Команда | Описание |
 |---------|----------|
-| `pyobsidian-index full` | Индексировать все заметки в хранилище |
-| `pyobsidian-index update` | Инкрементальное обновление (только новые/изменённые заметки) |
-| `pyobsidian-index clear` | Очистить весь индекс |
-| `pyobsidian-index status` | Показать статус индекса |
+| `full` | Индексировать все заметки в хранилище |
+| `update` | Инкрементальное обновление (только новые/изменённые заметки) |
+| `clear` | Очистить весь индекс |
+| `status` | Показать статус индекса |
 
 ### Переменные окружения
 
