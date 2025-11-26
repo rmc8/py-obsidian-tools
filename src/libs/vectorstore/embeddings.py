@@ -24,16 +24,19 @@ class BaseEmbeddingProvider(EmbeddingFunction, ABC):
         """
         pass
 
-    def embed_query(self, query: str) -> list[float]:
+    def embed_query(self, input: str) -> list[float]:
         """Convert a single query to embedding vector.
 
+        ChromaDB compatibility: uses 'input' parameter name to match
+        the EmbeddingFunction protocol.
+
         Args:
-            query: Query text to embed.
+            input: Query text to embed.
 
         Returns:
             Embedding vector.
         """
-        result = self.embed_documents([query])
+        result = self.embed_documents([input])
         return result[0] if result else []
 
     def __call__(self, input: Documents) -> Embeddings:
