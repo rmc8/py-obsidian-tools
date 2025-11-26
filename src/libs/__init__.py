@@ -2,14 +2,11 @@
 
 from .client import ObsidianClient
 from .config import ObsidianConfig, load_config
-from .exceptions import (
-    ObsidianAPIError,
-    ObsidianAuthError,
-    ObsidianConfigError,
-    ObsidianConnectionError,
-    ObsidianNotFoundError,
-)
-from .models import CommandInfo, FileInfo, NoteContent, SearchMatch, SearchResult
+from .exceptions import (ObsidianAPIError, ObsidianAuthError,
+                         ObsidianConfigError, ObsidianConnectionError,
+                         ObsidianNotFoundError)
+from .models import (CommandInfo, FileInfo, NoteContent, SearchMatch,
+                     SearchResult)
 
 __all__ = [
     "ObsidianClient",

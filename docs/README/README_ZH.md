@@ -190,6 +190,27 @@ Windows：`%APPDATA%/Claude/claude_desktop_config.json`
 ```bash
 # 无需安装 - 使用 uvx 直接运行
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# 使用外部嵌入提供商
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**使用 uv（开发用）**：
+
+```bash
+# 基础（本地嵌入 - 无需 API 密钥）
+uv sync
+
+# 使用外部嵌入提供商
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# 运行索引器
+uv run pyobsidian-index full --verbose
 ```
 
 **使用 pip**：
@@ -213,6 +234,9 @@ pip install "py-obsidian-tools[vector-all]"
 # 使用 uvx（推荐 - 无需安装）
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# 使用 uv（开发用）
+uv run pyobsidian-index full --verbose
+
 # 如果已通过 pip 安装
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # 使用 uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <命令>
+
+# 使用 uv（开发用）
+uv run pyobsidian-index <命令>
 
 # 使用 pip 安装
 pyobsidian-index <命令>

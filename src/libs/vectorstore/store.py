@@ -5,6 +5,7 @@ from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 import chromadb
 
@@ -132,6 +133,40 @@ class ObsidianVectorStore:
         collection.add(ids=ids, documents=documents, metadatas=metadatas)
         return len(chunks)
 
+    def _is_external_api_provider(self) -> bool:
+        """Check if using external API provider that benefits from parallel processing."""
+        return self._vector_config.provider in ("openai", "google", "cohere")
+
+    def _index_note_batch(
+        self,
+        notes_batch: list[dict],
+    ) -> list[dict[str, Any]]:
+        """Index a batch of notes in parallel using ThreadPoolExecutor.
+
+        Args:
+            notes_batch: List of note dicts with 'path', 'content', 'mtime' keys.
+
+        Returns:
+            List of result dicts with 'path', 'chunks', 'error' keys.
+        """
+        results: list[dict[str, Any]] = []
+
+        def process_note(note: dict) -> dict[str, Any]:
+            path = note.get("path", "")
+            content = note.get("content", "")
+            mtime = note.get("mtime", 0.0)
+            try:
+                chunks = self.index_note(path, content, mtime)
+                return {"path": path, "chunks": chunks, "error": None}
+            except Exception as e:
+                return {"path": path, "chunks": 0, "error": str(e)}
+
+        batch_size = self._vector_config.batch_size
+        with ThreadPoolExecutor(max_workers=batch_size) as executor:
+            results = list(executor.map(process_note, notes_batch))
+
+        return results
+
     def index_vault(
         self,
         notes: list[dict],
@@ -150,20 +185,43 @@ class ObsidianVectorStore:
         total_chunks = 0
         errors: list[dict] = []
 
-        for i, note in enumerate(notes):
-            path = note.get("path", "")
-            content = note.get("content", "")
-            mtime = note.get("mtime", 0.0)
+        # Use parallel processing for external API providers
+        if self._is_external_api_provider():
+            batch_size = self._vector_config.batch_size
+            processed = 0
 
-            try:
-                chunks = self.index_note(path, content, mtime)
-                total_notes += 1
-                total_chunks += chunks
+            for i in range(0, len(notes), batch_size):
+                batch = notes[i : i + batch_size]
+                results = self._index_note_batch(batch)
 
-                if progress_callback:
-                    progress_callback(i + 1, len(notes), path)
-            except Exception as e:
-                errors.append({"path": path, "error": str(e)})
+                for result in results:
+                    processed += 1
+                    if result["error"]:
+                        errors.append(
+                            {"path": result["path"], "error": result["error"]}
+                        )
+                    else:
+                        total_notes += 1
+                        total_chunks += result["chunks"]
+
+                    if progress_callback:
+                        progress_callback(processed, len(notes), result["path"])
+        else:
+            # Sequential processing for local providers
+            for i, note in enumerate(notes):
+                path = note.get("path", "")
+                content = note.get("content", "")
+                mtime = note.get("mtime", 0.0)
+
+                try:
+                    chunks = self.index_note(path, content, mtime)
+                    total_notes += 1
+                    total_chunks += chunks
+
+                    if progress_callback:
+                        progress_callback(i + 1, len(notes), path)
+                except Exception as e:
+                    errors.append({"path": path, "error": str(e)})
 
         return {
             "total_notes": total_notes,
@@ -230,8 +288,8 @@ class ObsidianVectorStore:
                 collection_name=self._vector_config.collection_name,
                 total_documents=count,
                 total_notes=len(unique_paths),
-                embedding_provider=self._embedding_provider.name,
-                embedding_dimension=self._embedding_provider.dimension,
+                embedding_provider=self._embedding_provider.name(),
+                embedding_dimension=self._embedding_provider.dimension(),
                 last_updated=last_updated,
                 chroma_path=str(Path(self._vector_config.chroma_path).expanduser()),
             )
@@ -470,21 +528,42 @@ class ObsidianVectorStore:
             except Exception as e:
                 errors.append({"path": path, "error": str(e)})
 
-        # Add/update notes
-        for note in notes_to_add:
-            path = note.get("path", "")
-            content = note.get("content", "")
-            mtime = note.get("mtime", 0.0)
+        # Add/update notes - use parallel processing for external API providers
+        if self._is_external_api_provider() and notes_to_add:
+            batch_size = self._vector_config.batch_size
 
-            try:
-                chunks = self.index_note(path, content, mtime)
-                added_count += 1
-                chunks_count += chunks
-                current += 1
-                if progress_callback:
-                    progress_callback(current, total, path)
-            except Exception as e:
-                errors.append({"path": path, "error": str(e)})
+            for i in range(0, len(notes_to_add), batch_size):
+                batch = notes_to_add[i : i + batch_size]
+                results = self._index_note_batch(batch)
+
+                for result in results:
+                    current += 1
+                    if result["error"]:
+                        errors.append(
+                            {"path": result["path"], "error": result["error"]}
+                        )
+                    else:
+                        added_count += 1
+                        chunks_count += result["chunks"]
+
+                    if progress_callback:
+                        progress_callback(current, total, result["path"])
+        else:
+            # Sequential processing for local providers
+            for note in notes_to_add:
+                path = note.get("path", "")
+                content = note.get("content", "")
+                mtime = note.get("mtime", 0.0)
+
+                try:
+                    chunks = self.index_note(path, content, mtime)
+                    added_count += 1
+                    chunks_count += chunks
+                    current += 1
+                    if progress_callback:
+                        progress_callback(current, total, path)
+                except Exception as e:
+                    errors.append({"path": path, "error": str(e)})
 
         return {
             "added": added_count,

@@ -190,6 +190,27 @@ OBSIDIAN_PORT=27124
 ```bash
 # Установка не требуется - запуск напрямую через uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# С внешними провайдерами эмбеддингов
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**Используя uv (для разработки)**:
+
+```bash
+# Базовая (локальные эмбеддинги - API-ключ не требуется)
+uv sync
+
+# С внешними провайдерами эмбеддингов
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# Запуск индексатора
+uv run pyobsidian-index full --verbose
 ```
 
 **Используя pip**:
@@ -213,6 +234,9 @@ pip install "py-obsidian-tools[vector-all]"
 # Используя uvx (рекомендуется - установка не требуется)
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# Используя uv (для разработки)
+uv run pyobsidian-index full --verbose
+
 # Или если установлено через pip
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # Используя uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <команда>
+
+# Используя uv (для разработки)
+uv run pyobsidian-index <команда>
 
 # Используя установку pip
 pyobsidian-index <команда>

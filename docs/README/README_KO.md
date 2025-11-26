@@ -190,6 +190,27 @@ ChromaDB를 사용한 의미 검색 기능입니다. 이 기능을 사용하면 
 ```bash
 # 설치 불필요 - uvx로 직접 실행
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# 외부 임베딩 제공자 사용
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**uv 사용 (개발용)**:
+
+```bash
+# 기본 (로컬 임베딩 - API 키 불필요)
+uv sync
+
+# 외부 임베딩 제공자 사용
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# 인덱서 실행
+uv run pyobsidian-index full --verbose
 ```
 
 **pip 사용**:
@@ -213,6 +234,9 @@ pip install "py-obsidian-tools[vector-all]"
 # uvx 사용 (권장 - 설치 불필요)
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# uv 사용 (개발용)
+uv run pyobsidian-index full --verbose
+
 # pip로 설치된 경우
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # uvx 사용
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <명령>
+
+# uv 사용 (개발용)
+uv run pyobsidian-index <명령>
 
 # pip 설치 사용
 pyobsidian-index <명령>

@@ -190,6 +190,27 @@ Funcionalidade de pesquisa semântica usando ChromaDB. Este recurso permite cons
 ```bash
 # Sem instalação necessária - executar diretamente com uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# Com provedores de embeddings externos
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**Usando uv (para desenvolvimento)**:
+
+```bash
+# Básico (embeddings locais - não requer chave API)
+uv sync
+
+# Com provedores de embeddings externos
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# Executar indexador
+uv run pyobsidian-index full --verbose
 ```
 
 **Usando pip**:
@@ -213,6 +234,9 @@ Antes de usar a pesquisa vetorial, você precisa criar um índice do seu vault:
 # Usando uvx (recomendado - sem instalação necessária)
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# Usando uv (para desenvolvimento)
+uv run pyobsidian-index full --verbose
+
 # Ou se instalado via pip
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # Usando uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <comando>
+
+# Usando uv (para desenvolvimento)
+uv run pyobsidian-index <comando>
 
 # Usando instalação pip
 pyobsidian-index <comando>

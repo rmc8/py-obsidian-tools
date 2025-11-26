@@ -190,6 +190,27 @@ Semantic search functionality using ChromaDB. This feature allows natural langua
 ```bash
 # No installation required - run directly with uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# With external embedding providers
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**Using uv (for development)**:
+
+```bash
+# Basic (local embeddings - no API key required)
+uv sync
+
+# With external embedding providers
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# Run indexer
+uv run pyobsidian-index full --verbose
 ```
 
 **Using pip**:
@@ -213,6 +234,9 @@ Before using vector search, you need to create an index of your vault:
 # Using uvx (recommended - no installation required)
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# Using uv (for development)
+uv run pyobsidian-index full --verbose
+
 # Or if installed via pip
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # Using uvx
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <command>
+
+# Using uv (for development)
+uv run pyobsidian-index <command>
 
 # Using pip installation
 pyobsidian-index <command>
@@ -242,6 +269,7 @@ pyobsidian-index <command>
 VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
 VECTOR_CHROMA_PATH=~/.obsidian-vector
 VECTOR_CHUNK_SIZE=512
+VECTOR_BATCH_SIZE=3              # Parallel processing batch size (1-10, for external APIs)
 
 # For Ollama
 VECTOR_OLLAMA_HOST=http://localhost:11434

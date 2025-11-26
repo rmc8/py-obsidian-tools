@@ -92,6 +92,14 @@ class VectorConfig(BaseSettings):
         description="Maximum chunk size in characters",
     )
 
+    # Batch processing settings
+    batch_size: int = Field(
+        default=3,
+        ge=1,
+        le=10,
+        description="Number of notes to process in parallel for external API providers",
+    )
+
     # Embedding provider settings
     provider: Literal["default", "ollama", "openai", "google", "cohere"] = Field(
         default="default",

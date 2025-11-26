@@ -190,6 +190,27 @@ ChromaDBを使用したセマンティック検索機能です。この機能に
 ```bash
 # インストール不要 - uvxで直接実行
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# 外部埋め込みプロバイダーを使用する場合
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**uvを使用（開発用）**：
+
+```bash
+# 基本（ローカル埋め込み - APIキー不要）
+uv sync
+
+# 外部埋め込みプロバイダーを使用する場合
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# インデクサーを実行
+uv run pyobsidian-index full --verbose
 ```
 
 **pipを使用**：
@@ -213,6 +234,9 @@ pip install "py-obsidian-tools[vector-all]"
 # uvxを使用（推奨 - インストール不要）
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# uvを使用（開発用）
+uv run pyobsidian-index full --verbose
+
 # pipでインストール済みの場合
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # uvxを使用
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <コマンド>
+
+# uvを使用（開発用）
+uv run pyobsidian-index <コマンド>
 
 # pipインストールを使用
 pyobsidian-index <コマンド>
@@ -242,6 +269,7 @@ pyobsidian-index <コマンド>
 VECTOR_PROVIDER=default          # default, ollama, openai, google, cohere
 VECTOR_CHROMA_PATH=~/.obsidian-vector
 VECTOR_CHUNK_SIZE=512
+VECTOR_BATCH_SIZE=3              # 並列処理のバッチサイズ（1-10、外部API用）
 
 # Ollama用
 VECTOR_OLLAMA_HOST=http://localhost:11434

@@ -190,6 +190,27 @@ ChromaDB का उपयोग करके सेमांटिक सर्�
 ```bash
 # इंस्टॉलेशन आवश्यक नहीं - uvx से सीधे चलाएं
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+
+# बाहरी एम्बेडिंग प्रोवाइडर्स के साथ
+uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-google]' pyobsidian-index full --verbose
+uvx --from 'py-obsidian-tools[vector-cohere]' pyobsidian-index full --verbose
+```
+
+**uv का उपयोग (डेवलपमेंट के लिए)**:
+
+```bash
+# बेसिक (लोकल एम्बेडिंग्स - API कुंजी आवश्यक नहीं)
+uv sync
+
+# बाहरी एम्बेडिंग प्रोवाइडर्स के साथ
+uv sync --extra vector-openai
+uv sync --extra vector-google
+uv sync --extra vector-cohere
+uv sync --extra vector-all
+
+# इंडेक्सर चलाएं
+uv run pyobsidian-index full --verbose
 ```
 
 **pip का उपयोग**:
@@ -213,6 +234,9 @@ pip install "py-obsidian-tools[vector-all]"
 # uvx का उपयोग (अनुशंसित - इंस्टॉलेशन आवश्यक नहीं)
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
 
+# uv का उपयोग (डेवलपमेंट के लिए)
+uv run pyobsidian-index full --verbose
+
 # यदि pip से इंस्टॉल किया गया हो
 pyobsidian-index full --verbose
 ```
@@ -224,6 +248,9 @@ pyobsidian-index full --verbose
 ```bash
 # uvx का उपयोग
 uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <कमांड>
+
+# uv का उपयोग (डेवलपमेंट के लिए)
+uv run pyobsidian-index <कमांड>
 
 # pip इंस्टॉलेशन का उपयोग
 pyobsidian-index <कमांड>

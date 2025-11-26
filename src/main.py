@@ -7,15 +7,13 @@ from typing import Callable, ParamSpec, TypeVar
 
 from mcp.server.fastmcp import FastMCP
 
-from .libs import ObsidianAPIError, ObsidianClient, ObsidianConfigError, load_config
+from .libs import (ObsidianAPIError, ObsidianClient, ObsidianConfigError,
+                   load_config)
 from .libs.config import load_vector_config
-from .libs.exceptions import IndexNotFoundError, VectorConfigError, VectorStoreError
-from .libs.utils import (
-    format_frontmatter,
-    json_error,
-    validate_patch_params,
-    validate_period,
-)
+from .libs.exceptions import (IndexNotFoundError, VectorConfigError,
+                              VectorStoreError)
+from .libs.utils import (format_frontmatter, json_error, validate_patch_params,
+                         validate_period)
 
 # Initialize FastMCP server
 mcp = FastMCP("obsidian")

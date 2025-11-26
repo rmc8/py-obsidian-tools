@@ -6,14 +6,9 @@ from urllib.parse import quote
 import httpx
 
 from .config import ObsidianConfig
-from .exceptions import (
-    ObsidianAPIError,
-    ObsidianAuthError,
-    ObsidianConnectionError,
-    ObsidianNotFoundError,
-    ObsidianRateLimitError,
-    ObsidianTimeoutError,
-)
+from .exceptions import (ObsidianAPIError, ObsidianAuthError,
+                         ObsidianConnectionError, ObsidianNotFoundError,
+                         ObsidianRateLimitError, ObsidianTimeoutError)
 from .models import CommandInfo, NoteContent, SearchMatch, SearchResult
 
 

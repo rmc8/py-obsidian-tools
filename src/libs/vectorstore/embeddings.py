@@ -5,12 +5,8 @@ from abc import ABC, abstractmethod
 from chromadb import Documents, EmbeddingFunction, Embeddings
 
 from ..config import VectorConfig
-from ..exceptions import (
-    EmbeddingAPIError,
-    EmbeddingConnectionError,
-    EmbeddingProviderError,
-    EmbeddingTimeoutError,
-)
+from ..exceptions import (EmbeddingAPIError, EmbeddingConnectionError,
+                          EmbeddingProviderError, EmbeddingTimeoutError)
 
 
 class BaseEmbeddingProvider(EmbeddingFunction, ABC):
@@ -44,13 +40,11 @@ class BaseEmbeddingProvider(EmbeddingFunction, ABC):
         """ChromaDB compatibility - delegates to embed_documents."""
         return self.embed_documents(list(input))
 
-    @property
     @abstractmethod
     def dimension(self) -> int:
         """Return the embedding dimension."""
         pass
 
-    @property
     @abstractmethod
     def name(self) -> str:
         """Return the provider name."""
@@ -71,12 +65,10 @@ class DefaultEmbeddingProvider(BaseEmbeddingProvider):
             return []
         return self._ef(documents)
 
-    @property
     def dimension(self) -> int:
         """Return the embedding dimension."""
         return 384
 
-    @property
     def name(self) -> str:
         """Return the provider name."""
         return "default"
@@ -123,12 +115,10 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
             raise EmbeddingProviderError(f"Ollama API error: {e}") from e
         return embeddings
 
-    @property
     def dimension(self) -> int:
         """Return the embedding dimension."""
         return self._dimension or 768
 
-    @property
     def name(self) -> str:
         """Return the provider name."""
         return "ollama"
@@ -167,12 +157,10 @@ class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
         except Exception as e:
             raise EmbeddingAPIError(f"OpenAI API error: {e}") from e
 
-    @property
     def dimension(self) -> int:
         """Return the embedding dimension."""
         return self._dimensions.get(self._model, 1536)
 
-    @property
     def name(self) -> str:
         """Return the provider name."""
         return "openai"
@@ -213,12 +201,10 @@ class GoogleEmbeddingProvider(BaseEmbeddingProvider):
         except Exception as e:
             raise EmbeddingAPIError(f"Google AI API error: {e}") from e
 
-    @property
     def dimension(self) -> int:
         """Return the embedding dimension."""
         return 768
 
-    @property
     def name(self) -> str:
         """Return the provider name."""
         return "google"
@@ -256,12 +242,10 @@ class CohereEmbeddingProvider(BaseEmbeddingProvider):
         except Exception as e:
             raise EmbeddingAPIError(f"Cohere API error: {e}") from e
 
-    @property
     def dimension(self) -> int:
         """Return the embedding dimension."""
         return 1024
 
-    @property
     def name(self) -> str:
         """Return the provider name."""
         return "cohere"

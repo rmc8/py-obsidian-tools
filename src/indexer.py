@@ -43,12 +43,9 @@ def _check_dependencies() -> None:
 
 from .libs.client import ObsidianClient  # noqa: E402
 from .libs.config import load_config, load_vector_config  # noqa: E402
-from .libs.exceptions import (
-    IndexNotFoundError,  # noqa: E402
-    ObsidianAPIError,
-    VectorConfigError,
-    VectorStoreError,
-)
+from .libs.exceptions import (IndexNotFoundError,  # noqa: E402
+                              ObsidianAPIError, VectorConfigError,
+                              VectorStoreError)
 
 
 def print_progress(current: int, total: int, path: str, verbose: bool = False) -> None:
@@ -114,6 +111,8 @@ async def cmd_full(args: argparse.Namespace) -> int:
     print("=" * 40)
     print(f"Provider: {vector_config.provider}")
     print(f"ChromaDB path: {vector_config.chroma_path}")
+    if vector_config.provider in ("openai", "google", "cohere"):
+        print(f"Batch size: {vector_config.batch_size} (parallel processing)")
     print()
 
     try:
