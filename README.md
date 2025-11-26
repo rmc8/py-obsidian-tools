@@ -179,17 +179,128 @@ On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```
 </details>
 
-## Vector Search (Optional)
+## Vector Search
 
-Semantic search functionality using ChromaDB. This feature allows natural language queries across your vault.
+Semantic search functionality using ChromaDB is included by default. This feature allows natural language queries across your vault.
 
-### Installation
+> **Note**: Vector search dependencies (chromadb, semantic-text-splitter) are now included as required dependencies. No extras needed for basic usage!
+
+### MCP Server Configuration with Vector Search
+
+Vector search works out of the box with the default local embeddings (all-MiniLM-L6-v2):
+
+```json
+{
+  "mcpServers": {
+    "obsidian-tools": {
+      "command": "uvx",
+      "args": ["py-obsidian-tools"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124"
+      }
+    }
+  }
+}
+```
+
+<details>
+  <summary>With OpenAI embeddings (recommended for quality)</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian-tools": {
+      "command": "uvx",
+      "args": ["py-obsidian-tools[vector-openai]"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124",
+        "VECTOR_PROVIDER": "openai",
+        "VECTOR_OPENAI_API_KEY": "<your_openai_api_key>"
+      }
+    }
+  }
+}
+```
+</details>
+
+<details>
+  <summary>With Google AI embeddings</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian-tools": {
+      "command": "uvx",
+      "args": ["py-obsidian-tools[vector-google]"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124",
+        "VECTOR_PROVIDER": "google",
+        "VECTOR_GOOGLE_API_KEY": "<your_google_api_key>"
+      }
+    }
+  }
+}
+```
+</details>
+
+<details>
+  <summary>With Cohere embeddings</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian-tools": {
+      "command": "uvx",
+      "args": ["py-obsidian-tools[vector-cohere]"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124",
+        "VECTOR_PROVIDER": "cohere",
+        "VECTOR_COHERE_API_KEY": "<your_cohere_api_key>"
+      }
+    }
+  }
+}
+```
+</details>
+
+<details>
+  <summary>With Ollama (local, high quality)</summary>
+
+```json
+{
+  "mcpServers": {
+    "obsidian-tools": {
+      "command": "uvx",
+      "args": ["py-obsidian-tools"],
+      "env": {
+        "OBSIDIAN_API_KEY": "<your_api_key_here>",
+        "OBSIDIAN_HOST": "127.0.0.1",
+        "OBSIDIAN_PORT": "27124",
+        "VECTOR_PROVIDER": "ollama",
+        "VECTOR_OLLAMA_HOST": "http://localhost:11434",
+        "VECTOR_OLLAMA_MODEL": "nomic-embed-text"
+      }
+    }
+  }
+}
+```
+</details>
+
+### CLI Installation
 
 **Using uvx (recommended)**:
 
 ```bash
 # No installation required - run directly with uvx
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # With external embedding providers
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +328,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # Basic (local embeddings - no API key required)
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # With external embedding providers
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +343,7 @@ Before using vector search, you need to create an index of your vault:
 
 ```bash
 # Using uvx (recommended - no installation required)
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # Using uv (for development)
 uv run pyobsidian-index full --verbose
@@ -241,13 +352,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **Note**: The `pyobsidian-index` command requires the `[vector]` extras. When using uvx, you must include `[vector]` in the package specification. Running `uvx --from py-obsidian-tools pyobsidian-index` without `[vector]` will fail.
-
 ### CLI Commands
 
 ```bash
 # Using uvx
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <command>
+uvx --from py-obsidian-tools pyobsidian-index <command>
 
 # Using uv (for development)
 uv run pyobsidian-index <command>
