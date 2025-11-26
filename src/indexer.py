@@ -5,11 +5,42 @@ import asyncio
 import json
 import sys
 
-from .libs.client import ObsidianClient
-from .libs.config import load_config, load_vector_config
-from .libs.exceptions import (IndexNotFoundError, ObsidianAPIError,
-                              VectorConfigError, VectorStoreError)
-from .libs.vectorstore.store import ObsidianVectorStore
+# Check for optional dependencies before importing vectorstore modules
+_MISSING_DEPS: list[str] = []
+
+try:
+    import chromadb  # noqa: F401
+except ImportError:
+    _MISSING_DEPS.append("chromadb")
+
+try:
+    import semantic_text_splitter  # noqa: F401
+except ImportError:
+    _MISSING_DEPS.append("semantic-text-splitter")
+
+
+def _check_dependencies() -> None:
+    """Check if required optional dependencies are installed."""
+    if _MISSING_DEPS:
+        print("Error: Missing required dependencies for vector search.", file=sys.stderr)
+        print(f"Missing packages: {', '.join(_MISSING_DEPS)}", file=sys.stderr)
+        print(file=sys.stderr)
+        print("To use pyobsidian-index, install with vector extras:", file=sys.stderr)
+        print("  uvx --from 'py-obsidian-tools[vector]' pyobsidian-index", file=sys.stderr)
+        print(file=sys.stderr)
+        print("Or install directly with pip:", file=sys.stderr)
+        print("  pip install 'py-obsidian-tools[vector]'", file=sys.stderr)
+        sys.exit(1)
+
+
+from .libs.client import ObsidianClient  # noqa: E402
+from .libs.config import load_config, load_vector_config  # noqa: E402
+from .libs.exceptions import (  # noqa: E402
+    IndexNotFoundError,
+    ObsidianAPIError,
+    VectorConfigError,
+    VectorStoreError,
+)
 
 
 def print_progress(current: int, total: int, path: str, verbose: bool = False) -> None:
@@ -287,6 +318,13 @@ async def cmd_status(args: argparse.Namespace) -> int:
 
 def main() -> None:
     """Main entry point for the CLI."""
+    # Check dependencies first
+    _check_dependencies()
+
+    # Import vectorstore only after dependency check passes
+    global ObsidianVectorStore
+    from .libs.vectorstore.store import ObsidianVectorStore
+
     parser = argparse.ArgumentParser(
         prog="pyobsidian-index",
         description="Manage Obsidian vector search index",
