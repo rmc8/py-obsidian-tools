@@ -179,17 +179,19 @@ OBSIDIAN_PORT=27124
 ```
 </details>
 
-## Векторный поиск (Опционально)
+## Векторный поиск
 
-Функция семантического поиска с использованием ChromaDB. Эта функция позволяет выполнять запросы на естественном языке по всему вашему хранилищу.
+Функция семантического поиска с использованием ChromaDB включена по умолчанию. Эта функция позволяет выполнять запросы на естественном языке по всему вашему хранилищу.
 
-### Установка
+> **Примечание**: Зависимости векторного поиска (chromadb, semantic-text-splitter) теперь включены как обязательные зависимости. Никаких extras для базового использования не требуется!
+
+### Установка CLI
 
 **Используя uvx (рекомендуется)**:
 
 ```bash
 # Установка не требуется - запуск напрямую через uvx
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # С внешними провайдерами эмбеддингов
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +219,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # Базовая (локальные эмбеддинги - API-ключ не требуется)
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # С внешними провайдерами эмбеддингов
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +234,7 @@ pip install "py-obsidian-tools[vector-all]"
 
 ```bash
 # Используя uvx (рекомендуется - установка не требуется)
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # Используя uv (для разработки)
 uv run pyobsidian-index full --verbose
@@ -241,13 +243,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **Примечание**: Команда `pyobsidian-index` требует extras `[vector]`. При использовании uvx необходимо включить `[vector]` в спецификацию пакета. Выполнение `uvx --from py-obsidian-tools pyobsidian-index` без `[vector]` завершится ошибкой.
-
 ### CLI-команды
 
 ```bash
 # Используя uvx
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <команда>
+uvx --from py-obsidian-tools pyobsidian-index <команда>
 
 # Используя uv (для разработки)
 uv run pyobsidian-index <команда>

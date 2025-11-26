@@ -179,17 +179,19 @@ Auf Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```
 </details>
 
-## Vektorsuche (Optional)
+## Vektorsuche
 
-Semantische Suchfunktionalität mit ChromaDB. Diese Funktion ermöglicht natürlichsprachliche Abfragen über Ihren gesamten Vault.
+Semantische Suchfunktionalität mit ChromaDB ist standardmäßig enthalten. Diese Funktion ermöglicht natürlichsprachliche Abfragen über Ihren gesamten Vault.
 
-### Installation
+> **Hinweis**: Die Vektorsuche-Abhängigkeiten (chromadb, semantic-text-splitter) sind jetzt als erforderliche Abhängigkeiten enthalten. Keine Extras für die grundlegende Nutzung erforderlich!
+
+### CLI-Installation
 
 **Mit uvx (empfohlen)**:
 
 ```bash
 # Keine Installation erforderlich - direkt mit uvx ausführen
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # Mit externen Embedding-Anbietern
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +219,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # Basis (lokale Embeddings - kein API-Schlüssel erforderlich)
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # Mit externen Embedding-Anbietern
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +234,7 @@ Bevor Sie die Vektorsuche verwenden, müssen Sie einen Index Ihres Vaults erstel
 
 ```bash
 # Mit uvx (empfohlen - keine Installation erforderlich)
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # Mit uv (für Entwicklung)
 uv run pyobsidian-index full --verbose
@@ -241,13 +243,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **Hinweis**: Der Befehl `pyobsidian-index` erfordert die `[vector]` Extras. Bei Verwendung von uvx müssen Sie `[vector]` in der Paketspezifikation angeben. Das Ausführen von `uvx --from py-obsidian-tools pyobsidian-index` ohne `[vector]` wird fehlschlagen.
-
 ### CLI-Befehle
 
 ```bash
 # Mit uvx
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <Befehl>
+uvx --from py-obsidian-tools pyobsidian-index <Befehl>
 
 # Mit uv (für Entwicklung)
 uv run pyobsidian-index <Befehl>

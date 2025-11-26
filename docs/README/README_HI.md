@@ -179,17 +179,19 @@ Windows पर: `%APPDATA%/Claude/claude_desktop_config.json`
 ```
 </details>
 
-## वेक्टर सर्च (वैकल्पिक)
+## वेक्टर सर्च
 
-ChromaDB का उपयोग करके सेमांटिक सर्च फंक्शनैलिटी। यह फीचर आपके पूरे वॉल्ट में प्राकृतिक भाषा क्वेरीज़ को सक्षम करता है।
+ChromaDB का उपयोग करके सेमांटिक सर्च फंक्शनैलिटी डिफ़ॉल्ट रूप से शामिल है। यह फीचर आपके पूरे वॉल्ट में प्राकृतिक भाषा क्वेरीज़ को सक्षम करता है।
 
-### इंस्टॉलेशन
+> **नोट**: वेक्टर सर्च डिपेंडेंसीज़ (chromadb, semantic-text-splitter) अब आवश्यक डिपेंडेंसीज़ के रूप में शामिल हैं। बेसिक उपयोग के लिए कोई extras आवश्यक नहीं!
+
+### CLI इंस्टॉलेशन
 
 **uvx का उपयोग (अनुशंसित)**:
 
 ```bash
 # इंस्टॉलेशन आवश्यक नहीं - uvx से सीधे चलाएं
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # बाहरी एम्बेडिंग प्रोवाइडर्स के साथ
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +219,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # बेसिक (लोकल एम्बेडिंग्स - API कुंजी आवश्यक नहीं)
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # बाहरी एम्बेडिंग प्रोवाइडर्स के साथ
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +234,7 @@ pip install "py-obsidian-tools[vector-all]"
 
 ```bash
 # uvx का उपयोग (अनुशंसित - इंस्टॉलेशन आवश्यक नहीं)
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # uv का उपयोग (डेवलपमेंट के लिए)
 uv run pyobsidian-index full --verbose
@@ -241,13 +243,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **नोट**: `pyobsidian-index` कमांड के लिए `[vector]` extras आवश्यक है। uvx का उपयोग करते समय, आपको पैकेज स्पेसिफिकेशन में `[vector]` शामिल करना होगा। `[vector]` के बिना `uvx --from py-obsidian-tools pyobsidian-index` चलाने पर विफलता होगी।
-
 ### CLI कमांड्स
 
 ```bash
 # uvx का उपयोग
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <कमांड>
+uvx --from py-obsidian-tools pyobsidian-index <कमांड>
 
 # uv का उपयोग (डेवलपमेंट के लिए)
 uv run pyobsidian-index <कमांड>

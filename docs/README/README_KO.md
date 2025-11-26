@@ -179,17 +179,19 @@ Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 ```
 </details>
 
-## 벡터 검색 (선택 사항)
+## 벡터 검색
 
-ChromaDB를 사용한 의미 검색 기능입니다. 이 기능을 사용하면 볼트 전체에서 자연어 쿼리가 가능합니다.
+ChromaDB를 사용한 의미 검색 기능이 기본으로 포함됩니다. 이 기능을 사용하면 볼트 전체에서 자연어 쿼리가 가능합니다.
 
-### 설치
+> **참고**: 벡터 검색 종속성(chromadb, semantic-text-splitter)이 이제 필수 종속성으로 포함됩니다. 기본 사용에는 extras가 필요하지 않습니다!
+
+### CLI 설치
 
 **uvx 사용 (권장)**:
 
 ```bash
 # 설치 불필요 - uvx로 직접 실행
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # 외부 임베딩 제공자 사용
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +219,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # 기본 (로컬 임베딩 - API 키 불필요)
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # 외부 임베딩 제공자 사용
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +234,7 @@ pip install "py-obsidian-tools[vector-all]"
 
 ```bash
 # uvx 사용 (권장 - 설치 불필요)
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # uv 사용 (개발용)
 uv run pyobsidian-index full --verbose
@@ -241,13 +243,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **참고**: `pyobsidian-index` 명령에는 `[vector]` extras가 필요합니다. uvx를 사용할 때 패키지 사양에 `[vector]`를 포함해야 합니다. `[vector]` 없이 `uvx --from py-obsidian-tools pyobsidian-index`를 실행하면 실패합니다.
-
 ### CLI 명령
 
 ```bash
 # uvx 사용
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <명령>
+uvx --from py-obsidian-tools pyobsidian-index <명령>
 
 # uv 사용 (개발용)
 uv run pyobsidian-index <명령>

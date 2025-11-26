@@ -179,17 +179,19 @@ Windowsの場合：`%APPDATA%/Claude/claude_desktop_config.json`
 ```
 </details>
 
-## ベクトル検索（オプション）
+## ベクトル検索
 
-ChromaDBを使用したセマンティック検索機能です。この機能により、Vault全体で自然言語クエリが可能になります。
+ChromaDBを使用したセマンティック検索機能がデフォルトで含まれています。この機能により、Vault全体で自然言語クエリが可能になります。
 
-### インストール
+> **注意**: ベクトル検索の依存関係（chromadb、semantic-text-splitter）は必須依存関係として含まれるようになりました。基本的な使用にはextrasの指定は不要です！
+
+### CLIのインストール
 
 **uvxを使用（推奨）**：
 
 ```bash
 # インストール不要 - uvxで直接実行
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # 外部埋め込みプロバイダーを使用する場合
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +219,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # 基本（ローカル埋め込み - APIキー不要）
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # 外部埋め込みプロバイダーを使用する場合
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +234,7 @@ pip install "py-obsidian-tools[vector-all]"
 
 ```bash
 # uvxを使用（推奨 - インストール不要）
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # uvを使用（開発用）
 uv run pyobsidian-index full --verbose
@@ -241,13 +243,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **注意**: `pyobsidian-index`コマンドには`[vector]`エクストラが必要です。uvxを使用する場合、パッケージ指定に`[vector]`を含める必要があります。`[vector]`なしで`uvx --from py-obsidian-tools pyobsidian-index`を実行すると失敗します。
-
 ### CLIコマンド
 
 ```bash
 # uvxを使用
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <コマンド>
+uvx --from py-obsidian-tools pyobsidian-index <コマンド>
 
 # uvを使用（開発用）
 uv run pyobsidian-index <コマンド>

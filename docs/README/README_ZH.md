@@ -179,17 +179,19 @@ Windows：`%APPDATA%/Claude/claude_desktop_config.json`
 ```
 </details>
 
-## 向量搜索（可选）
+## 向量搜索
 
-使用 ChromaDB 的语义搜索功能。此功能允许在整个保险库中进行自然语言查询。
+使用 ChromaDB 的语义搜索功能默认包含。此功能允许在整个保险库中进行自然语言查询。
 
-### 安装
+> **注意**：向量搜索依赖项（chromadb、semantic-text-splitter）现已作为必需依赖项包含。基本使用无需指定 extras！
+
+### CLI 安装
 
 **使用 uvx（推荐）**：
 
 ```bash
 # 无需安装 - 使用 uvx 直接运行
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # 使用外部嵌入提供商
 uvx --from 'py-obsidian-tools[vector-openai]' pyobsidian-index full --verbose
@@ -217,7 +219,7 @@ uv run pyobsidian-index full --verbose
 
 ```bash
 # 基础（本地嵌入 - 无需 API 密钥）
-pip install "py-obsidian-tools[vector]"
+pip install py-obsidian-tools
 
 # 使用外部嵌入提供商
 pip install "py-obsidian-tools[vector-openai]"
@@ -232,7 +234,7 @@ pip install "py-obsidian-tools[vector-all]"
 
 ```bash
 # 使用 uvx（推荐 - 无需安装）
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index full --verbose
+uvx --from py-obsidian-tools pyobsidian-index full --verbose
 
 # 使用 uv（开发用）
 uv run pyobsidian-index full --verbose
@@ -241,13 +243,11 @@ uv run pyobsidian-index full --verbose
 pyobsidian-index full --verbose
 ```
 
-> **注意**：`pyobsidian-index` 命令需要 `[vector]` extras。使用 uvx 时，必须在包规范中包含 `[vector]`。不带 `[vector]` 运行 `uvx --from py-obsidian-tools pyobsidian-index` 将会失败。
-
 ### CLI 命令
 
 ```bash
 # 使用 uvx
-uvx --from 'py-obsidian-tools[vector]' pyobsidian-index <命令>
+uvx --from py-obsidian-tools pyobsidian-index <命令>
 
 # 使用 uv（开发用）
 uv run pyobsidian-index <命令>
