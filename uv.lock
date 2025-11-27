@@ -1324,42 +1324,32 @@ wheels = [
 
 [[package]]
 name = "py-obsidian-tools"
-version = "0.1.8"
+version = "0.1.10"
 source = { editable = "." }
 dependencies = [
+    { name = "chromadb" },
     { name = "httpx" },
     { name = "mcp" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
     { name = "python-dotenv" },
+    { name = "semantic-text-splitter" },
 ]
 
 [package.optional-dependencies]
-vector = [
-    { name = "chromadb" },
-    { name = "semantic-text-splitter" },
-]
 vector-all = [
-    { name = "chromadb" },
     { name = "cohere" },
     { name = "google-generativeai" },
     { name = "openai" },
-    { name = "semantic-text-splitter" },
 ]
 vector-cohere = [
-    { name = "chromadb" },
     { name = "cohere" },
-    { name = "semantic-text-splitter" },
 ]
 vector-google = [
-    { name = "chromadb" },
     { name = "google-generativeai" },
-    { name = "semantic-text-splitter" },
 ]
 vector-openai = [
-    { name = "chromadb" },
     { name = "openai" },
-    { name = "semantic-text-splitter" },
 ]
 
 [package.dev-dependencies]
@@ -1370,11 +1360,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "chromadb", marker = "extra == 'vector'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-all'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-cohere'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-google'", specifier = ">=0.4.0" },
-    { name = "chromadb", marker = "extra == 'vector-openai'", specifier = ">=0.4.0" },
+    { name = "chromadb", specifier = ">=0.4.0" },
     { name = "cohere", marker = "extra == 'vector-all'", specifier = ">=5.0.0" },
     { name = "cohere", marker = "extra == 'vector-cohere'", specifier = ">=5.0.0" },
     { name = "google-generativeai", marker = "extra == 'vector-all'", specifier = ">=0.3.0" },
@@ -1386,13 +1372,9 @@ requires-dist = [
     { name = "pydantic", specifier = ">=2.11.0" },
     { name = "pydantic-settings", specifier = ">=2.10.0" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-all'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-cohere'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-google'", specifier = ">=0.18.0" },
-    { name = "semantic-text-splitter", marker = "extra == 'vector-openai'", specifier = ">=0.18.0" },
+    { name = "semantic-text-splitter", specifier = ">=0.18.0" },
 ]
-provides-extras = ["vector", "vector-openai", "vector-google", "vector-cohere", "vector-all"]
+provides-extras = ["vector-openai", "vector-google", "vector-cohere", "vector-all"]
 
 [package.metadata.requires-dev]
 dev = [

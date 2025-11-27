@@ -1,92 +1,93 @@
-"""Embedding providers for vector search."""
+"""Embedding providers for vector search using ChromaDB's official functions."""
 
-from abc import ABC, abstractmethod
+from typing import Protocol
 
 from chromadb import Documents, EmbeddingFunction, Embeddings
 
 from ..config import VectorConfig
-from ..exceptions import (EmbeddingAPIError, EmbeddingConnectionError,
-                          EmbeddingProviderError, EmbeddingTimeoutError)
+from ..exceptions import (
+    EmbeddingAPIError,
+    EmbeddingConnectionError,
+    EmbeddingProviderError,
+    EmbeddingTimeoutError,
+)
 
 
-class BaseEmbeddingProvider(EmbeddingFunction, ABC):
-    """Base class for embedding providers."""
+class EmbeddingProviderProtocol(Protocol):
+    """Protocol for embedding providers with name and dimension."""
 
-    @abstractmethod
-    def embed_documents(self, documents: list[str]) -> list[list[float]]:
-        """Convert texts to embedding vectors.
+    def __call__(self, input: Documents) -> Embeddings: ...
+
+    def name(self) -> str: ...
+
+    def dimension(self) -> int: ...
+
+
+class EmbeddingProviderWrapper(EmbeddingFunction):
+    """Wrapper for ChromaDB's official EmbeddingFunction with name/dimension support.
+
+    Inherits from EmbeddingFunction to ensure full compatibility with ChromaDB's
+    collection.query() which expects embed_query method.
+    """
+
+    def __init__(
+        self,
+        ef: EmbeddingFunction,
+        provider_name: str,
+        embedding_dimension: int,
+    ) -> None:
+        """Initialize the wrapper.
 
         Args:
-            documents: List of texts to embed.
+            ef: ChromaDB EmbeddingFunction instance.
+            provider_name: Name of the provider (e.g., "openai", "default").
+            embedding_dimension: Dimension of the embedding vectors.
+        """
+        self._ef = ef
+        self._name = provider_name
+        self._dimension = embedding_dimension
+
+    def __call__(self, input: Documents) -> Embeddings:
+        """Generate embeddings using the wrapped function."""
+        return self._ef(input)
+
+    def embed_query(self, input: Documents) -> Embeddings:
+        """Embed query documents for search.
+
+        ChromaDB's collection.query() calls this method with query_texts as a list.
+
+        Args:
+            input: List of query texts to embed.
 
         Returns:
             List of embedding vectors.
         """
-        pass
-
-    def embed_query(self, input: str) -> list[float]:
-        """Convert a single query to embedding vector.
-
-        ChromaDB compatibility: uses 'input' parameter name to match
-        the EmbeddingFunction protocol.
-
-        Args:
-            input: Query text to embed.
-
-        Returns:
-            Embedding vector.
-        """
-        result = self.embed_documents([input])
-        return result[0] if result else []
-
-    def __call__(self, input: Documents) -> Embeddings:
-        """ChromaDB compatibility - delegates to embed_documents."""
-        return self.embed_documents(list(input))
-
-    @abstractmethod
-    def dimension(self) -> int:
-        """Return the embedding dimension."""
-        pass
-
-    @abstractmethod
-    def name(self) -> str:
-        """Return the provider name."""
-        pass
-
-
-class DefaultEmbeddingProvider(BaseEmbeddingProvider):
-    """Default embedding provider using ChromaDB's built-in all-MiniLM-L6-v2."""
-
-    def __init__(self) -> None:
-        from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
-
-        self._ef = DefaultEmbeddingFunction()
-
-    def embed_documents(self, documents: list[str]) -> list[list[float]]:
-        """Convert texts to embedding vectors."""
-        if not documents:
-            return []
-        return self._ef(documents)
-
-    def dimension(self) -> int:
-        """Return the embedding dimension."""
-        return 384
+        return self._ef(input)
 
     def name(self) -> str:
         """Return the provider name."""
-        return "default"
+        return self._name
+
+    def dimension(self) -> int:
+        """Return the embedding dimension."""
+        return self._dimension
 
 
-class OllamaEmbeddingProvider(BaseEmbeddingProvider):
-    """Embedding provider using Ollama local models."""
+class OllamaEmbeddingProvider:
+    """Custom embedding provider using Ollama local models.
+
+    Note: ChromaDB doesn't have an official Ollama EmbeddingFunction,
+    so we maintain a custom implementation.
+    """
 
     def __init__(self, host: str, model: str) -> None:
         self._host = host
         self._model = model
-        self._dimension: int | None = None
+        self._dimension_cache: int | None = None
 
-    def embed_documents(self, documents: list[str]) -> list[list[float]]:
-        """Convert texts to embedding vectors."""
+    def __call__(self, input: Documents) -> Embeddings:
+        """Generate embeddings for the input documents."""
+        documents = list(input)
         if not documents:
             return []
 
@@ -104,8 +105,8 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
                     data = response.json()
                     embedding = data.get("embedding", [])
                     embeddings.append(embedding)
-                    if self._dimension is None and embedding:
-                        self._dimension = len(embedding)
+                    if self._dimension_cache is None and embedding:
+                        self._dimension_cache = len(embedding)
         except httpx.ConnectError as e:
             raise EmbeddingConnectionError(
                 f"Cannot connect to Ollama at {self._host}: {e}"
@@ -118,173 +119,112 @@ class OllamaEmbeddingProvider(BaseEmbeddingProvider):
             raise EmbeddingProviderError(f"Ollama API error: {e}") from e
         return embeddings
 
-    def dimension(self) -> int:
-        """Return the embedding dimension."""
-        return self._dimension or 768
-
     def name(self) -> str:
         """Return the provider name."""
         return "ollama"
 
-
-class OpenAIEmbeddingProvider(BaseEmbeddingProvider):
-    """Embedding provider using OpenAI API."""
-
-    def __init__(self, api_key: str, model: str) -> None:
-        self._api_key = api_key
-        self._model = model
-        self._dimensions = {
-            "text-embedding-3-small": 1536,
-            "text-embedding-3-large": 3072,
-            "text-embedding-ada-002": 1536,
-        }
-
-    def embed_documents(self, documents: list[str]) -> list[list[float]]:
-        """Convert texts to embedding vectors."""
-        if not documents:
-            return []
-
-        try:
-            from openai import OpenAI
-        except ImportError:
-            raise EmbeddingProviderError(
-                "openai package not installed. Install with: pip install 'py-obsidian-tools[vector-openai]'"
-            )
-
-        try:
-            client = OpenAI(api_key=self._api_key)
-            response = client.embeddings.create(input=documents, model=self._model)
-            return [item.embedding for item in response.data]
-        except ImportError:
-            raise
-        except Exception as e:
-            raise EmbeddingAPIError(f"OpenAI API error: {e}") from e
-
     def dimension(self) -> int:
         """Return the embedding dimension."""
-        return self._dimensions.get(self._model, 1536)
-
-    def name(self) -> str:
-        """Return the provider name."""
-        return "openai"
+        return self._dimension_cache or 768
 
 
-class GoogleEmbeddingProvider(BaseEmbeddingProvider):
-    """Embedding provider using Google Generative AI API."""
+def get_embedding_provider(
+    config: VectorConfig,
+) -> EmbeddingProviderWrapper | OllamaEmbeddingProvider:
+    """Factory function to create embedding provider based on config.
 
-    def __init__(self, api_key: str, model: str) -> None:
-        self._api_key = api_key
-        self._model = model
+    Uses ChromaDB's official EmbeddingFunction implementations where available.
 
-    def embed_documents(self, documents: list[str]) -> list[list[float]]:
-        """Convert texts to embedding vectors."""
-        if not documents:
-            return []
+    Args:
+        config: Vector search configuration.
 
-        try:
-            import google.generativeai as genai
-        except ImportError:
-            raise EmbeddingProviderError(
-                "google-generativeai package not installed. Install with: pip install 'py-obsidian-tools[vector-google]'"
-            )
+    Returns:
+        Embedding provider instance.
 
-        try:
-            genai.configure(api_key=self._api_key)
-            embeddings: list[list[float]] = []
-            for text in documents:
-                result = genai.embed_content(
-                    model=f"models/{self._model}",
-                    content=text,
-                    task_type="retrieval_document",
-                )
-                embeddings.append(result["embedding"])
-            return embeddings
-        except ImportError:
-            raise
-        except Exception as e:
-            raise EmbeddingAPIError(f"Google AI API error: {e}") from e
-
-    def dimension(self) -> int:
-        """Return the embedding dimension."""
-        return 768
-
-    def name(self) -> str:
-        """Return the provider name."""
-        return "google"
-
-
-class CohereEmbeddingProvider(BaseEmbeddingProvider):
-    """Embedding provider using Cohere API."""
-
-    def __init__(self, api_key: str, model: str) -> None:
-        self._api_key = api_key
-        self._model = model
-
-    def embed_documents(self, documents: list[str]) -> list[list[float]]:
-        """Convert texts to embedding vectors."""
-        if not documents:
-            return []
-
-        try:
-            import cohere
-        except ImportError:
-            raise EmbeddingProviderError(
-                "cohere package not installed. Install with: pip install 'py-obsidian-tools[vector-cohere]'"
-            )
-
-        try:
-            client = cohere.Client(self._api_key)
-            response = client.embed(
-                texts=documents,
-                model=self._model,
-                input_type="search_document",
-            )
-            return [list(emb) for emb in response.embeddings]
-        except ImportError:
-            raise
-        except Exception as e:
-            raise EmbeddingAPIError(f"Cohere API error: {e}") from e
-
-    def dimension(self) -> int:
-        """Return the embedding dimension."""
-        return 1024
-
-    def name(self) -> str:
-        """Return the provider name."""
-        return "cohere"
-
-
-def get_embedding_provider(config: VectorConfig) -> BaseEmbeddingProvider:
-    """Factory function to create embedding provider based on config."""
+    Raises:
+        EmbeddingProviderError: If provider is unknown or required keys are missing.
+    """
     provider = config.provider
 
     if provider == "default":
-        return DefaultEmbeddingProvider()
+        from chromadb.utils.embedding_functions import DefaultEmbeddingFunction
+
+        return EmbeddingProviderWrapper(
+            ef=DefaultEmbeddingFunction(),
+            provider_name="default",
+            embedding_dimension=384,
+        )
+
     elif provider == "ollama":
+        # ChromaDB doesn't have official Ollama support
         return OllamaEmbeddingProvider(
             host=config.ollama_host,
             model=config.ollama_model,
         )
+
     elif provider == "openai":
         if not config.openai_api_key:
             raise EmbeddingProviderError("OpenAI API key is required")
-        return OpenAIEmbeddingProvider(
-            api_key=config.openai_api_key,
-            model=config.openai_model,
+
+        from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+
+        dimensions = {
+            "text-embedding-3-small": 1536,
+            "text-embedding-3-large": 3072,
+            "text-embedding-ada-002": 1536,
+        }
+        return EmbeddingProviderWrapper(
+            ef=OpenAIEmbeddingFunction(
+                api_key=config.openai_api_key,
+                model_name=config.openai_model,
+            ),
+            provider_name="openai",
+            embedding_dimension=dimensions.get(config.openai_model, 1536),
         )
+
     elif provider == "google":
         if not config.google_api_key:
             raise EmbeddingProviderError("Google API key is required")
-        return GoogleEmbeddingProvider(
-            api_key=config.google_api_key,
-            model=config.google_model,
-        )
+
+        try:
+            from chromadb.utils.embedding_functions import (
+                GoogleGenerativeAiEmbeddingFunction,
+            )
+
+            return EmbeddingProviderWrapper(
+                ef=GoogleGenerativeAiEmbeddingFunction(
+                    api_key=config.google_api_key,
+                    model_name=config.google_model,
+                ),
+                provider_name="google",
+                embedding_dimension=768,
+            )
+        except ImportError:
+            raise EmbeddingProviderError(
+                "google-generativeai package not installed. "
+                "Install with: pip install 'py-obsidian-tools[vector-google]'"
+            )
+
     elif provider == "cohere":
         if not config.cohere_api_key:
             raise EmbeddingProviderError("Cohere API key is required")
-        return CohereEmbeddingProvider(
-            api_key=config.cohere_api_key,
-            model=config.cohere_model,
-        )
+
+        try:
+            from chromadb.utils.embedding_functions import CohereEmbeddingFunction
+
+            return EmbeddingProviderWrapper(
+                ef=CohereEmbeddingFunction(
+                    api_key=config.cohere_api_key,
+                    model_name=config.cohere_model,
+                ),
+                provider_name="cohere",
+                embedding_dimension=1024,
+            )
+        except ImportError:
+            raise EmbeddingProviderError(
+                "cohere package not installed. "
+                "Install with: pip install 'py-obsidian-tools[vector-cohere]'"
+            )
+
     else:
         raise EmbeddingProviderError(f"Unknown provider: {provider}")
